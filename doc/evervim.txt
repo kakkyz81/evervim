@@ -1,0 +1,9 @@
+*evervim.txt*	edit evernote with vim.
+
+Version: 0.0.1
+Author : kakkyz <kakkyz81@gmail.com>
+Documentation Author: 
+License: MIT license  
+
+
+vim:ts=4 sw=4 tw=78 ft=help:

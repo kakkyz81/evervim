@@ -1,0 +1,162 @@
+*evervim.txt*	evernoteをvimで編集する。
+
+Version: 0.0.1
+Author : kakkyz <kakkyz81@gmail.com>
+Japanese Documentation Author: kakkyz
+License: MIT license  
+
+目次						*evervim-contents*
+
+概要			|evervim-introduction|
+必要なもの		|evervim-requires|
+インストール		|evervim-install|
+使い方			|evervim-usage|
+インターフェース	|evervim-interface|
+  コマンド		  |evervim-commands|
+  変数			  |evervim-variables|
+ToDo			|evervim-todo|
+既知のバグ		|evervim-bugs|
+更新履歴		|evervim-changelog|
+
+==============================================================================
+概要						*evervim-introduction*
+
+*evervim* (または *evervim.vim* ) はevernote(http://www.evernote.com)のノート
+をvimから編集することを目的に作成されたプラグインである。
+
+==============================================================================
+必要なもの						*evervim-requires*
+
+python及び+pythonでコンパイルされたvimが必要である。
+pythonが有効かどうかは、
+>
+	:echo has('python')
+<
+で確認することができる。(1が表示されれば、pythonは有効だ。)
+
+==============================================================================
+インストール						*evervim-install*
+
+ダウンロードしたプラグインをが読める位置に配置する。
+たいていは他のプラグイン同様に配置すればいい。
+インストール後に、
+>
+	:EvervimSetup
+<
+というコマンドが追加されているので、実行してevernoteのユーザーIDと
+パスワードを入力し、初期化を行うこと。
+
+==============================================================================
+使い方						*evervim-usage*
+
+	ノートブックの一覧を表示する
+>
+	:EvervimNotebookList
+<
+
+ノートブックの一覧が表示されるので、一つを選択して<CR>を押すと、
+そのノートブック内のノートが表示される。
+ノートの上で再度<CR>を押すと、対象のノートが表示される。
+
+ノートはデフォルトでは、
+1行目がタイトル
+2行目がタグ(カンマ区切り)
+3行目以下が本文となっている。
+本文は、xml文書で指定されているため、タグを含めて表示される。
+
+==============================================================================
+インターフェース				*evervim-interface*
+
+------------------------------------------------------------------------------
+コマンド 					*evervim-commands*
+
+:EvervimNotebookList				*:EvervimNotebookList*
+		ノートブックの一覧を表示する。
+		ノートブックを選択して、<CR>を押すことでそのノートブックの
+		ノート一覧を表示する。
+
+:EvervimListTags				*:EvervimListTags
+		タグの一覧を表示する。
+		タグを選択して、<CR>を押すことでそのタグの
+		ノート一覧を表示する。
+
+:EvervimSearchByQuery  {query}			*:EvervimSearchByQuery
+		検索文字列を指定して、ヒットしたノートの一覧を表示する。
+		検索文字列の書式は以下を参考にせよ
+		https://www.evernote.com/about/kb/article/advanced-search
+
+:EvervimCreateNote	  			*:EvervimCreateNote
+		新規ノートを保存するためのバッファが開かれる。
+		バッファの保存時にノートがEvernoteに保存される
+
+:EvervimSetup					*:EvervimSetup
+		アカウントのセットアップを行う。
+------------------------------------------------------------------------------
+変数						*evervim-variables*
+
+g:evervim_workdir				*g:evervim_workdir*
+		作業用ワークディレクトリ
+		
+		初期値は$HOME/.evervimである。
+
+g:evervim_username				*g:evervim_username*
+		ユーザー名。:EvervimSetupで設定する場合は指定しなくて良い。
+		
+		初期値は空文字である。
+
+g:evervim_password				*g:evervim_password*
+		ユーザー名。:EvervimSetupで設定する場合は指定しなくて良い。
+		セキュリティを考えると、指定しないほうが無難である。
+		
+		初期値は空文字である。
+
+g:evervim_sortnotes				*g:evervim_sortnotes*
+		ノートの一覧のソート順を示す。とりうる値は以下。
+		(updated|created|title) (asc|desc)
+
+		初期値は'updated desc'である。これは、更新日の降順という意味である。
+
+g:evervim_sortbooks				*g:evervim_sortnotebooks*
+		ノートブックの一覧のソート順を示す。とりうる値は以下。
+		(name|serviceCreated|serviceUpdated) (asc|desc)
+
+		初期値は'name asc'である。これは、名前の昇順という意味である。
+
+g:evervim_sorttags				*g:evervim_sorttags*
+		タグの一覧のソート順を示す。とりうる値は以下。
+		(name) (asc|desc)
+
+		初期値は'name asc'である。これは、名前の昇順という意味である。
+
+g:evervim_hidexmlheader				*g:evervim_hidexmlheader*
+		ノート本文のxmlのヘッダー部を隠すかどうかを設定する。
+		0の時、ヘッダー部を表示する。通常ヘッダー部を変更することは
+		ないため、この設定は変更すべきでない。
+		
+		初期値は1である。これは、ヘッダー部を隠すという意味である。
+
+g:evervim_removeemptylineonxml			*g:evervim_removeemptylineonxml*
+		ノート本文のxmlを表示する際、空白行を除去するかどうかを設定する。
+		0の時、空白行を残す。
+
+		初期値は1である。これは、空白行を除去するという意味である。
+
+g:evervim_xmlindent				*g:evervim_xmlindent*
+		ノート本文のxmlを整形する際のインデント文字列を設定する。
+
+		初期値は'    'である。
+
+==============================================================================
+TODO						*evervim-todo*
+・ドキュメントの充実
+・リスト操作時の前に戻る機能の実装
+
+==============================================================================
+既知のバグ					*evervim-bugs*
+
+==============================================================================
+更新履歴					*evervim-changelog*
+
+	0.0.1		2011-05-05	1st release.
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

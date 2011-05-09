@@ -97,7 +97,7 @@ try:
     f.write(vim.eval("s:evervim_password"))
     f.close()
     vim.command("call s:setCommand()")
-except StandardError as e:
+except StandardError, e:
     print e
 EOF
 endfunction

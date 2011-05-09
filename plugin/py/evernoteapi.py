@@ -147,7 +147,7 @@ class EvernoteAPI(object):
         try :
             authResult = self.userStore.authenticate(self.username, self.password,
                             CONSUMER_KEY, CONSUMER_SECRET)
-        except Errors.EDAMUserException as e:
+        except Errors.EDAMUserException, e:
             if e.parameter == "username":
                     raise StandardError("wrong username. username=%s" % self.username )
             if e.parameter == "password":

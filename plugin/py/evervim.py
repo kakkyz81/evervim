@@ -181,9 +181,18 @@ class Evervim:
 
     def __u2s(self, string): # {{{
         """ change utf8 to shift-jis """
-        return unicode(string, 'utf-8').encode('sjis')
+        if((vim.eval("has('win32')") != '0') or
+           (vim.eval("has('win64')") != '0')):
+            return unicode(string, 'utf-8').encode('sjis')
+        else:
+            return string
+
     # }}}
     def __s2u(self, string): # {{{
         """ change shift-jis to utf-8 """
-        return unicode(string, 'sjis').encode('utf-8')
+        if((vim.eval("has('win32')") != '0') or
+           (vim.eval("has('win64')") != '0')):
+            return unicode(string, 'sjis').encode('utf-8')
+        else:
+            return string
     # }}}

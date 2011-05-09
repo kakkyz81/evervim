@@ -9,3 +9,4 @@ vim‚ÌƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚©‚ç:echo has('python')‚ÆŽÀs‚µA1‚ª•\Ž¦‚³‚ê‚Ä‚¢‚ê‚Î—˜—p‚Å‚«‚
 
 ## TODO:
 EƒŠƒXƒg•\Ž¦ŽŸ‚Ì–ß‚é(Ctrl-o)‚È‚Ç‚ÌŽÀ‘•
+E‚Ü‚¾•¶Žš‰»‚¯‚©‚È‚É‚©‚Å‚¤‚Ü‚­‚¢‚©‚È‚¢ƒP[ƒX‚ª‚ ‚éB‰ð–¾‚Æ‘Îô

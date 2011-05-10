@@ -19,6 +19,8 @@ class Evervim:
     notes = []
     notebooks = []
     tags = []
+    # recentry loaded 
+    windows = (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
     # }}}
     def setAPI(self): #{{{
         Evervim.api = EvernoteAPI(vim.eval("g:evervim_username"), vim.eval("s:evervim_password"))
@@ -181,8 +183,7 @@ class Evervim:
 
     def __u2s(self, string): # {{{
         """ change utf8 to shift-jis """
-        if((vim.eval("has('win32')") != '0') or
-           (vim.eval("has('win64')") != '0')):
+        if(Evervim.windows):
             return unicode(string, 'utf-8').encode('sjis')
         else:
             return string
@@ -190,8 +191,7 @@ class Evervim:
     # }}}
     def __s2u(self, string): # {{{
         """ change shift-jis to utf-8 """
-        if((vim.eval("has('win32')") != '0') or
-           (vim.eval("has('win64')") != '0')):
+        if(Evervim.windows):
             return unicode(string, 'sjis').encode('utf-8')
         else:
             return string

@@ -153,8 +153,7 @@ class Evervim:
         
         # remove header
         if (vim.eval("g:evervim_hidexmlheader") != '0'): 
-            indentlen = len(vim.eval('g:evervim_xmlindent'))
-            contentxml = "\n".join([line[indentlen:] for line in contentxml.splitlines()[4:-1]])
+            contentxml = "\n".join(line.lstrip() for line in contentxml.splitlines()[4:-1])
 
         # remove empty lines 
         if vim.eval('g:evervim_removeemptylineonxml') != '0':

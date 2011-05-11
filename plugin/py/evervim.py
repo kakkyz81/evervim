@@ -3,6 +3,7 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import vim,sys
+import re
 from evernoteapi import EvernoteAPI 
 from xml.dom import minidom
 
@@ -150,15 +151,16 @@ class Evervim:
         # format and convert 
         contentxml = doc.toprettyxml(indent=vim.eval('g:evervim_xmlindent')
                 ,encoding='utf-8')
-        
+
+        headre = re.compile('^' + vim.eval('g:evervim_xmlindent'))
         # remove header
         if (vim.eval("g:evervim_hidexmlheader") != '0'): 
-            contentxml = "\n".join(line.lstrip() for line in contentxml.splitlines()[4:-1])
+            contentxml = "\n".join(re.sub(headre, '', line) for line in contentxml.splitlines()[4:-1])
 
         # remove empty lines 
         if vim.eval('g:evervim_removeemptylineonxml') != '0':
-            vim.current.buffer.append([self.__u2s(line) for line 
-                in contentxml.splitlines() if len(line.strip()) != 0 ])
+            for setline in ([self.__u2s(line) for line in contentxml.splitlines() if len(line.strip()) != 0 ]):
+                vim.current.buffer.append(setline)
         else:
             vim.current.buffer.append([self.__u2s(line) for line 
                 in contentxml.splitlines()])

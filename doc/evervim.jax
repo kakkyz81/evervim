@@ -105,7 +105,7 @@ g:evervim_username				*g:evervim_username*
 		初期値は空文字である。
 
 g:evervim_password				*g:evervim_password*
-		ユーザー名。:EvervimSetupで設定する場合は指定しなくて良い。
+		パスワード。:EvervimSetupで設定する場合は指定しなくて良い。
 		セキュリティを考えると、指定しないほうが無難である。
 		
 		初期値は空文字である。

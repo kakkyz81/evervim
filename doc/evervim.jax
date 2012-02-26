@@ -112,19 +112,19 @@ g:evervim_password				*g:evervim_password*
 
 g:evervim_sortnotes				*g:evervim_sortnotes*
 		ノートの一覧のソート順を示す。とりうる値は以下。
-		(updated|created|title) (asc|desc)
+		(updated | created | title) (asc | desc)
 
 		初期値は'updated desc'である。これは、更新日の降順という意味である。
 
 g:evervim_sortbooks				*g:evervim_sortnotebooks*
 		ノートブックの一覧のソート順を示す。とりうる値は以下。
-		(name|serviceCreated|serviceUpdated) (asc|desc)
+		(name | serviceCreated | serviceUpdated) (asc | desc)
 
 		初期値は'name asc'である。これは、名前の昇順という意味である。
 
 g:evervim_sorttags				*g:evervim_sorttags*
 		タグの一覧のソート順を示す。とりうる値は以下。
-		(name) (asc|desc)
+		(name) (asc | desc)
 
 		初期値は'name asc'である。これは、名前の昇順という意味である。
 

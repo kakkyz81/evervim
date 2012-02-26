@@ -16,15 +16,14 @@ import evernote.edam.notestore.NoteStore as NoteStore
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 import evernote.edam.limits.constants as LimitConstants
-
-
 # }}}
 class EvernoteAPI(object):
     """ interface to evernote API """
+    # CLASS CONSTANT {{{
     MAXNOTES = LimitConstants.EDAM_USER_NOTES_MAX
     NOTECONTENT_HEADER = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>' 
     NOTECONTENT_FOOTER = '</en-note>'
-    
+    #}}}
 #### constractuor.
     def __init__(self, username, password): #{{{
         """ initialize """
@@ -40,15 +39,15 @@ class EvernoteAPI(object):
         return self.__getNoteStore().createNote(authToken, note)
     #}}}
     def newNote(self): #{{{
+        """ return Types.Note() """
         return Types.Note()
     #}}}
-
     def updateNote(self, note): #{{{
+        """ update note, return same as notesotre.updateNotenote """
         authToken = self.__getAuthToken()
         note.updated = int(time.time() * 1000)
         return self.__getNoteStore().updateNote(authToken, note)
     #}}}
-
     def editNote(self, note, editText): #{{{
         """ 
         edit note by edittext
@@ -134,7 +133,7 @@ class EvernoteAPI(object):
         return self.__getNoteStore().listNotebooks(authToken)
     #}}}
     def listTags(self, force=False): #{{{
-        """ return listNotebooks. TODO:キャッシュする"""
+        """ return listNotebooks. TODO:cache it """
 
         if force or (not hasattr(self, '_EvernoteAPI__taglist')):
             self.__taglist = self.__getNoteStore().listTags(self.__getAuthToken())
@@ -197,7 +196,6 @@ class EvernoteAPI(object):
 
         return self.noteStore
     #}}}
-     
 #### end class.
 
 #### CONSTANT 
@@ -210,5 +208,4 @@ EVERNOTE_HOST = "www.evernote.com"
 USERSTORE_URI = "https://" + EVERNOTE_HOST + "/edam/user"
 NOTESTORE_URIBASE = "https://" + EVERNOTE_HOST + "/edam/note/"
 # }}}
-
 #  ---------------------------------------- eof ----------------------------------------

@@ -21,17 +21,23 @@ class Evervim:
     notebooks = []
     tags = []
     # recentry loaded 
+    """ if environment is windows then true """
     windows = (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
     # }}}
     def setAPI(self): #{{{
+        """
+        setup API
+        """
         Evervim.api = EvernoteAPI(vim.eval("g:evervim_username"), vim.eval("s:evervim_password"))
     #}}}
     
     def auth(self): #{{{
+        """ auth """
         Evervim.api.auth()
     #}}}
     
     def notesByNotebook(self): #{{{
+        """ get notelist by notebook """
         selectnotebook = Evervim.notebooks[self.__getArrayIndexByCurrentLine()]
         Evervim.notes = Evervim.api.notesByNotebook(selectnotebook)
         self.sortNotes()
@@ -135,7 +141,7 @@ class Evervim:
         if (vim.eval("g:evervim_hidexmlheader") == '0'):
             vim.current.buffer.append(EvernoteAPI.NOTECONTENT_FOOTER) # 5 ( content ( header )))
     #}}}
- 
+
     def getNote(self): #{{{
         currentline = int(vim.eval('l:pointer'))
         selectedNote = Evervim.notes[currentline - 2]

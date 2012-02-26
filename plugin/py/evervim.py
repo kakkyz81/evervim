@@ -106,21 +106,34 @@ class Evervim:
 
     def checkNote(self):  # {{{
         """ check note format """
-        contents = [self.__s2u(line) for line in vim.current.buffer[:]]
+        bufstrs = [self.__s2u(line) for line in vim.current.buffer[:]]
 #@       mkdtxt = markdownAndENML.parseMarkdown("\n".join(contents[2::]))
+        title    = self.__getTitleFromXMLBuf(bufstrs)
+        tags     = self.__getTagsFromXMLBuf(bufstrs)
+        contents = self.__getContentsFromXMLBuf(bufstrs)
 
-        if (vim.eval("g:evervim_hidexmlheader") != '0'):
-            contents = contents[0:2] + [EvernoteAPI.NOTECONTENT_HEADER] + \
-                       contents[2::] + [EvernoteAPI.NOTECONTENT_FOOTER]
-#@           contents = contents[0:2] + [EvernoteAPI.NOTECONTENT_HEADER] + [mkdtxt] + [EvernoteAPI.NOTECONTENT_FOOTER]
-
-        note = Evervim.api.editNote(Evervim.currentnote, "\n".join(contents))
+        note = Evervim.api.editNote(Evervim.currentnote, title, tags, contents)
 
         minidom.parseString(note.content)
-        print note.content
         Evervim.currentnote = note
+
         if len(note.title) == 0:
             raise StandardError("*** must set title! ***")
+    #}}}
+
+    def __getTitleFromXMLBuf(self, strings):  # {{{
+        return strings[0]
+    #}}}
+
+    def __getTagsFromXMLBuf(self, strings):  # {{{
+        return strings[1]
+    #}}}
+
+    def __getContentsFromXMLBuf(self, strings):  # {{{
+        if (vim.eval("g:evervim_hidexmlheader") != '0'):
+            return [EvernoteAPI.NOTECONTENT_HEADER] + strings[2::] + [EvernoteAPI.NOTECONTENT_FOOTER]
+        else:
+            return strings[2::]
     #}}}
 
     def updateNote(self):  # {{{
@@ -164,35 +177,11 @@ class Evervim:
         Evervim.currentnote = note
 
         vim.current.buffer[:] = None  # clear buffer
-        vim.current.buffer = self.editNoteBufferByXML(note)
+        lines = self.editNoteBufferByXML(note)
+        vim.current.buffer[0] = lines[0]
+        for line in lines[1:]:
+            vim.current.buffer.append(line)
 
-#       vim.current.buffer[0] = self.__u2s(note.title)
-#       vim.current.buffer.append(self.__u2s(','.join(note.tagNames)))
-#
-#       doc = minidom.parseString(note.content)
-#       ##  markdown
-#@      mkd = markdownAndENML.parseENML(doc.documentElement)
-#@      for l in mkd.splitlines():
-#@          ll = l.encode('shift-jis')
-#@          vim.current.buffer.append(ll)
-#@      return
-#@      vim.current.buffer.append('------------------------------------------------')
-#       ##  xml
-#       # format and convert
-#       contentxml = doc.toprettyxml(indent=vim.eval('g:evervim_xmlindent')
-#               ,encoding='utf-8')
-
-#       headre = re.compile('^' + vim.eval('g:evervim_xmlindent'))
-#       # remove header
-#       if (vim.eval("g:evervim_hidexmlheader") != '0'):
-#           contentxml = "\n".join(re.sub(headre, '', line) for line in contentxml.splitlines()[4:-1])
-
-#       # remove empty lines
-#       if vim.eval('g:evervim_removeemptylineonxml') != '0':
-#           for setline in ([self.__u2s(line) for line in contentxml.splitlines() if len(line.strip()) != 0 ]):
-#               vim.current.buffer.append(setline)
-#       else:
-#           vim.current.buffer.append([self.__u2s(line) for line in contentxml.splitlines()])
     #}}}
 
     def editNoteBufferByXML(self, note):  # {{{
@@ -223,7 +212,9 @@ class Evervim:
 
         bufferStrings.append(title)
         bufferStrings.append(tags)
-        bufferStrings.append(lines)
+        bufferStrings += lines
+
+        return bufferStrings
     #}}}
 # ----- private methods
 

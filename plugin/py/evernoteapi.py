@@ -48,20 +48,13 @@ class EvernoteAPI(object):
         note.updated = int(time.time() * 1000)
         return self.__getNoteStore().updateNote(authToken, note)
     #}}}
-    def editNote(self, note, editText): #{{{
+    def editNote(self, note, title, tags, contents): #{{{
         """ 
-        edit note by edittext
-        edittext, 
-            1 line title
-            2 line tags (canmma separated)
-            3 lines below content
+        edit note by title(string), tags(string, camma separated), content(array of string)
         """
-        lines = editText.splitlines()
-        if len(lines) < 3:
-            raise StandardError("must 3 lines.")
-        note.title = lines[0].strip()
-        self.editTag(note, lines[1])
-        note.content = "\n".join(lines[2:])
+        note.title = title
+        self.editTag(note, tags)
+        note.content = "\n".join(contents)
         
         return note
     #}}}

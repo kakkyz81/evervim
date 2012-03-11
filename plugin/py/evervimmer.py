@@ -6,10 +6,12 @@ import vim
 import re
 import markdownAndENML
 from evernoteapi import EvernoteAPI
+from evervim_editor import EvervimEditor
+from evervim_editor import EvervimSetting
 from xml.dom import minidom
 
 
-class Evervimmer:
+class Evervimmer(object):
     """ interface to vim """
     # {{{
     try:
@@ -27,6 +29,23 @@ class Evervimmer:
     """ if environment is windows then true """
     windows = \
         (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
+    # }}}
+
+    editor  = EvervimEditor()
+    setting = EvervimSetting()
+
+    """ settings from vim option """
+    def setting(self):  # {{{
+        setting.workdir              = vim.eval("g:workdir")
+        setting.username             = vim.eval("g:username")
+        setting.password             = vim.eval("s:password")
+        setting.sortnotes            = vim.eval("g:sortnotes")
+        setting.sortnotebooks        = vim.eval("g:sortnotebooks")
+        setting.sorttags             = vim.eval("g:sorttags")
+        setting.hidexmlheader        = vim.eval("g:hidexmlheader")
+        setting.removeemptylineonxml = vim.eval("g:removeemptylineonxml")
+        setting.xmlindent            = vim.eval("g:xmlindent")
+        setting.usemarkdown          = vim.eval("g:usemarkdown")
     # }}}
 
     def setAPI(self):  # {{{

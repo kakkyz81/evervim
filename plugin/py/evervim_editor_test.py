@@ -4,18 +4,28 @@
 # License: MIT
 import unittest
 from evervim_editor import EvervimEditor
+from evervim_editor import EvervimSetting
 
 class TestEvervimEditor(unittest.TestCase):
     """ doc """
 
     def setUp(self): #{{{
-        self.editor = EvervimEditor()
+        self.editor  = EvervimEditor()
     #}}}
 
-    def testSetAPI(self): #{{{
-        self.assertIsNone(EvervimEditor.api)
-        self.editor.setAPI()
-        self.assertIsNotNone(EvervimEditor.api)
+    def testSetting(self): #{{{
+        setting = EvervimSetting()
+        self.assertIsNone(setting.workdir              )
+        self.assertIsNone(setting.username             )
+        self.assertIsNone(setting.password             )
+        self.assertIsNone(setting.sortnotes            )
+        self.assertIsNone(setting.sortnotebooks        )
+        self.assertIsNone(setting.sorttags             )
+        self.assertIsNone(setting.hidexmlheader        )
+        self.assertIsNone(setting.removeemptylineonxml )
+        self.assertIsNone(setting.xmlindent            )
+        self.assertIsNone(setting.usemarkdown          )
+        self.assertRaises(AttributeError, lambda:setting.zzzzzzzzzzzz )
     #}}}
 
 if __name__ == '__main__':

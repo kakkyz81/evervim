@@ -35,22 +35,22 @@ class Evervimmer:
         """
         setup API
         """
-        Evervim.api = EvernoteAPI(vim.eval("g:evervim_username"),
+        Evervimmer.api = EvernoteAPI(vim.eval("g:evervim_username"),
                 vim.eval("s:evervim_password"))
     #}}}
 
     def auth(self):  # {{{
         """ auth """
-        Evervim.api.auth()
+        Evervimmer.api.auth()
     #}}}
 
     def notesByNotebook(self):  # {{{
         """ get notelist by notebook """
-        selectnotebook = Evervim.notebooks[self.__getArrayIndexByCurrentLine()]
-        Evervim.notes = Evervim.api.notesByNotebook(selectnotebook)
+        selectnotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
+        Evervimmer.notes = Evervimmer.api.notesByNotebook(selectnotebook)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervim.notes]
+        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
                 " [notebook:%s]" % self.__u2s(selectnotebook.name))
     #}}}
@@ -58,49 +58,49 @@ class Evervimmer:
     def sortNotes(self):  # {{{
         sortOpt = vim.eval('g:evervim_sortnotes').split()
         if sortOpt[1] == 'asc':
-            Evervim.notes.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
+            Evervimmer.notes.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
                                                 getattr(b, sortOpt[0])))
         else:
-            Evervim.notes.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
+            Evervimmer.notes.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
                                                 getattr(a, sortOpt[0])))
 
     #}}}
 
     def notesByTag(self):  # {{{
-        selecttag = Evervim.tags[self.__getArrayIndexByCurrentLine()]
-        Evervim.notes = Evervim.api.notesByTag(selecttag)
+        selecttag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
+        Evervimmer.notes = Evervimmer.api.notesByTag(selecttag)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervim.notes]
+        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
                 " [tag:%s]" % self.__u2s(selecttag.name))
     #}}}
 
     def listNotebooks(self):  # {{{
-        Evervim.notebooks = Evervim.api.listNotebooks()
+        Evervimmer.notebooks = Evervimmer.api.listNotebooks()
         sortOpt = vim.eval('g:evervim_sortnotebooks').split()
         if sortOpt[1] == 'asc':
-            Evervim.notebooks.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
+            Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
                                                     getattr(b, sortOpt[0])))
         else:
-            Evervim.notebooks.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
+            Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
                                                     getattr(a, sortOpt[0])))
 
-        strs = [self.__u2s(notebook.name) for notebook in Evervim.notebooks]
+        strs = [self.__u2s(notebook.name) for notebook in Evervimmer.notebooks]
         self.__setBufferList(strs, " [all notebooks]")
     #}}}
 
     def listTags(self):  # {{{
-        Evervim.tags = Evervim.api.listTags()
+        Evervimmer.tags = Evervimmer.api.listTags()
         sortOpt = vim.eval('g:evervim_sorttags').split()
         if sortOpt[1] == 'asc':
-            Evervim.tags.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
+            Evervimmer.tags.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
                                                getattr(b, sortOpt[0])))
         else:
-            Evervim.tags.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
+            Evervimmer.tags.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
                                                getattr(a, sortOpt[0])))
 
-        strs = [self.__u2s(tag.name) for tag in Evervim.tags]
+        strs = [self.__u2s(tag.name) for tag in Evervimmer.tags]
         self.__setBufferList(strs, " [all tags]")
     #}}}
 
@@ -118,11 +118,11 @@ class Evervimmer:
 
         print contents
         print '-----------------------------------------'
-        note = Evervim.api.editNote(Evervim.currentnote, title, tags, contents)
+        note = Evervimmer.api.editNote(Evervimmer.currentnote, title, tags, contents)
 
         print note.content
         minidom.parseString(note.content)
-        Evervim.currentnote = note
+        Evervimmer.currentnote = note
 
         if len(note.title) == 0:
             raise StandardError("*** must set title! ***")
@@ -153,30 +153,30 @@ class Evervimmer:
     #}}}
 
     def __getContentsFromMkdBuf(self, strings):  # {{{
-        return [EvernoteAPI.NOTECONTENT_HEADER] + markdownAndENML.parseMarkdown("".join(strings[2::])) + [EvernoteAPI.NOTECONTENT_FOOTER]
+        return EvernoteAPI.NOTECONTENT_HEADER + markdownAndENML.parseMarkdown("".join(strings[2::])) + EvernoteAPI.NOTECONTENT_FOOTER
     #}}}
 
     def updateNote(self):  # {{{
         self.checkNote()
 
-        Evervim.api.updateNote(Evervim.currentnote)
+        Evervimmer.api.updateNote(Evervimmer.currentnote)
         print 'update successful.'
     #}}}
 
     def searchByQuery(self):  # {{{
         query = vim.eval("a:word")
-        Evervim.notes = Evervim.api.notesByQuery(query)
+        Evervimmer.notes = Evervimmer.api.notesByQuery(query)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervim.notes]
+        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles, " [query:%s]" % query)
 
     #}}}
 
     def createNote(self):  # {{{
-        Evervim.currentnote = Evervim.api.newNote()
+        Evervimmer.currentnote = Evervimmer.api.newNote()
         self.checkNote()
-        Evervim.api.createNote(Evervim.currentnote)
+        Evervimmer.api.createNote(Evervimmer.currentnote)
     #}}}
 
     def createNoteBuf(self):  # {{{
@@ -191,10 +191,10 @@ class Evervimmer:
 
     def getNote(self):  # {{{
         currentline = int(vim.eval('l:pointer'))
-        selectedNote = Evervim.notes[currentline - 2]
+        selectedNote = Evervimmer.notes[currentline - 2]
 
-        note = Evervim.api.getNote(selectedNote)
-        Evervim.currentnote = note
+        note = Evervimmer.api.getNote(selectedNote)
+        Evervimmer.currentnote = note
 
         vim.current.buffer[:] = None  # clear buffer
 
@@ -280,7 +280,7 @@ class Evervimmer:
 
     def __u2s(self, string):  # {{{
         """ change utf8 to shift-jis """
-        if(Evervim.windows):
+        if(Evervimmer.windows):
             try:
                 return unicode(string, 'utf-8').encode('sjis')
             except:
@@ -290,7 +290,7 @@ class Evervimmer:
 
     def __encode(self, unicodeData):  # {{{
         """ change unicode to output """
-        if(Evervim.windows):
+        if(Evervimmer.windows):
             return unicodeData.encode('sjis')
         else:
             return unicodeData.encode('utf-8')
@@ -299,7 +299,7 @@ class Evervimmer:
     # }}}
     def __s2u(self, string):  # {{{
         """ change shift-jis to utf-8 """
-        if(Evervim.windows):
+        if(Evervimmer.windows):
             return unicode(string, 'sjis').encode('utf-8')
         else:
             return string

@@ -203,7 +203,7 @@ def parseMarkdown(mkdtext):#{{{
 #   mkdtext = [line + "<br />"for line in mkdtext]
 #   print mkdtext
     m = markdown.markdown(mkdtext)
-    return [m]
+    return m
 #}}}
 # ----- private methods 
 def _getTagName(node):#{{{

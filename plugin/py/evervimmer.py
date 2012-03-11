@@ -3,10 +3,8 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import vim
-import sys
 import re
 import markdownAndENML
-import codecs
 from evernoteapi import EvernoteAPI
 from xml.dom import minidom
 
@@ -287,6 +285,7 @@ class Evervimmer:
                 return string
         else:
             return string
+    # }}}
 
     def __encode(self, unicodeData):  # {{{
         """ change unicode to output """
@@ -294,9 +293,8 @@ class Evervimmer:
             return unicodeData.encode('sjis')
         else:
             return unicodeData.encode('utf-8')
-
-
     # }}}
+
     def __s2u(self, string):  # {{{
         """ change shift-jis to utf-8 """
         if(Evervimmer.windows):

@@ -11,7 +11,7 @@ from evernoteapi import EvernoteAPI
 from xml.dom import minidom
 
 
-class Evervim:
+class Evervimmer:
     """ interface to vim """
     # {{{
     try:

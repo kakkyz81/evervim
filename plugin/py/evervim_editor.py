@@ -2,16 +2,12 @@
 # vim: sts=4 sw=4 fdm=marker
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
-import vim
-import sys
-import re
 import markdownAndENML
-import codecs
+import evervimmer
 from evernoteapi import EvernoteAPI
 from xml.dom import minidom
 
-
-class Evervim:
+class EvervimEditor:
     """ interface to vim """
     # {{{
     try:
@@ -19,16 +15,8 @@ class Evervim:
                 vim.eval("s:evervim_password"))
     except:
         api = None
-
-    # recentry loaded
-    currentnote = None
-    notes = []
-    notebooks = []
-    tags = []
-    # recentry loaded
-    """ if environment is windows then true """
-    windows = \
-        (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
+    
+    vimmer = Evervimmer()
     # }}}
 
     def setAPI(self):  # {{{

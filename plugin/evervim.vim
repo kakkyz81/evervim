@@ -58,8 +58,10 @@ endif
 if !exists('g:evervim_xmlindent') " 
     let g:evervim_xmlindent= '    '
 endif
-
-
+" use markdown when edit content(default = 1 means use markdown)
+if !exists('g:evervim_usemarkdown') "
+    let g:evervim_usemarkdown= 1 
+endif
 ""}}}
 
 " ---------------------------------------------------------------------------
@@ -67,7 +69,7 @@ endif
 " ---------------------------------------------------------------------------
 function! s:setCommand() " {{{
     command! EvervimNotebookList call s:notebookList()
-    command! -nargs=+ EvervimSearchByQuery call s:evervimSearchByQuery(<q-args>)
+    command! -nargs=+ EvervimmerSearchByQuery call s:evervimSearchByQuery(<q-args>)
     command! EvervimCreateNote call s:createNoteBuf()
     command! EvervimListTags call s:listTags()
 endfunction
@@ -83,13 +85,13 @@ function! s:loadAccount() " {{{
         let s:evervim_password = account[1]
     endif
 endfunction
-"command! EvervimLoadAccount call s:loadAccount()
+"command! EvervimmerLoadAccount call s:loadAccount()
 "}}}
 
 function! s:logincheck() " {{{
     python << EOF
 try:
-    Evervim().auth()
+    Evervimmer().auth()
     print 'login successful.'
     f = open(os.path.join(vim.eval('g:evervim_workdir'),'account.txt'), 'w')
     f.write(vim.eval("g:evervim_username"))
@@ -101,7 +103,7 @@ except StandardError, e:
     print e
 EOF
 endfunction
-""command! EvervimLoginCheck call s:logincheck()
+""command! EvervimmerLoginCheck call s:logincheck()
 "}}}
 
 function! s:setusername() " {{{
@@ -118,7 +120,7 @@ function! s:setup() " {{{
     call s:setusername()
     call s:setpassword()
     echo 'login check...'
-    python Evervim().setAPI()
+    python Evervimmer().setAPI()
     call s:logincheck()
 endfunction
 "}}}
@@ -130,7 +132,7 @@ function! s:notesByNotebook() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervim().notesByNotebook()
+    python Evervimmer().notesByNotebook()
     setlocal nomodifiable
     
     map <silent> <buffer> <CR> :call <SID>getNote()<CR>
@@ -144,7 +146,7 @@ function! s:notesByTag() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervim().notesByTag()
+    python Evervimmer().notesByTag()
     setlocal nomodifiable
     
     map <silent> <buffer> <CR> :call <SID>getNote()<CR>
@@ -160,7 +162,7 @@ function! s:getNote() " {{{
     call s:noteBufSetup()
  
     setlocal modifiable
-    python Evervim().getNote()
+    python Evervimmer().getNote()
     exec 'silent! :w!'
 
     autocmd BufWritePost <buffer> call s:updateNote()
@@ -169,7 +171,7 @@ endfunction
 "}}}
 
 function! s:updateNote() " {{{
-    python Evervim().updateNote() 
+    python Evervimmer().updateNote() 
 endfunction
 "}}}
 
@@ -177,7 +179,7 @@ function! s:notebookList() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervim().listNotebooks()
+    python Evervimmer().listNotebooks()
     setlocal nomodifiable
 
     map <silent> <buffer> <CR> :call <SID>notesByNotebook()<CR>
@@ -187,7 +189,7 @@ endfunction
 function! s:evervimSearchByQuery(word) " {{{
     call s:listBufSetup()
     setlocal modifiable
-    python Evervim().searchByQuery()
+    python Evervimmer().searchByQuery()
     setlocal nomodifiable
     map <silent> <buffer> <CR> call <SID>getNote()
 endfunction
@@ -204,7 +206,7 @@ endfunction
 "}}}
 
 function! s:createNote() " {{{
-    python Evervim().createNote() 
+    python Evervimmer().createNote() 
     bwipeout
 endfunction
 "}}}
@@ -214,7 +216,7 @@ function! s:createNoteBuf() " {{{
 
     exec 'edit ' . l:tmpflile
     
-    python Evervim().createNoteBuf() 
+    python Evervimmer().createNoteBuf() 
 
     autocmd BufWritePost <buffer> :call <SID>createNote()
 endfunction
@@ -224,7 +226,7 @@ function! s:listTags() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervim().listTags()
+    python Evervimmer().listTags()
     setlocal nomodifiable
 
     map <silent> <buffer> <CR> :call <SID>notesByTag()<CR>
@@ -274,7 +276,7 @@ endif
 python << EOF
 import sys,os,vim
 sys.path.append(os.path.join(vim.eval('expand("<sfile>:p:h")'),'py/'))
-from evervim import Evervim
+from evervimmer import Evervimmer
 EOF
 
 

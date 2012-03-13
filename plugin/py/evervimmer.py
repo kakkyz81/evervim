@@ -7,7 +7,7 @@ import re
 import markdownAndENML
 from evernoteapi import EvernoteAPI
 from evervim_editor import EvervimEditor
-from evervim_editor import EvervimSetting
+from evervim_editor import EvervimPref
 from xml.dom import minidom
 
 
@@ -31,29 +31,28 @@ class Evervimmer(object):
         (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
     # }}}
 
-    editor  = EvervimEditor()
-    setting = EvervimSetting()
+    editor  = EvervimEditor.getInstance()
+    pref = EvervimPref.getInstance()
 
-    """ settings from vim option """
-    def setting(self):  # {{{
-        setting.workdir              = vim.eval("g:workdir")
-        setting.username             = vim.eval("g:username")
-        setting.password             = vim.eval("s:password")
-        setting.sortnotes            = vim.eval("g:sortnotes")
-        setting.sortnotebooks        = vim.eval("g:sortnotebooks")
-        setting.sorttags             = vim.eval("g:sorttags")
-        setting.hidexmlheader        = vim.eval("g:hidexmlheader")
-        setting.removeemptylineonxml = vim.eval("g:removeemptylineonxml")
-        setting.xmlindent            = vim.eval("g:xmlindent")
-        setting.usemarkdown          = vim.eval("g:usemarkdown")
+    """ prefs from vim option """
+    def setPref(self):  # {{{
+        Evervimmer.pref.workdir              = vim.eval("g:workdir")
+        Evervimmer.pref.username             = vim.eval("g:username")
+        Evervimmer.pref.password             = vim.eval("s:password")
+        Evervimmer.pref.sortnotes            = vim.eval("g:sortnotes")
+        Evervimmer.pref.sortnotebooks        = vim.eval("g:sortnotebooks")
+        Evervimmer.pref.sorttags             = vim.eval("g:sorttags")
+        Evervimmer.pref.hidexmlheader        = vim.eval("g:hidexmlheader")
+        Evervimmer.pref.removeemptylineonxml = vim.eval("g:removeemptylineonxml")
+        Evervimmer.pref.xmlindent            = vim.eval("g:xmlindent")
+        Evervimmer.pref.usemarkdown          = vim.eval("g:usemarkdown")
     # }}}
 
     def setAPI(self):  # {{{
         """
         setup API
         """
-        Evervimmer.api = EvernoteAPI(vim.eval("g:evervim_username"),
-                vim.eval("s:evervim_password"))
+        Evervimmer.editor.setAPI()
     #}}}
 
     def auth(self):  # {{{

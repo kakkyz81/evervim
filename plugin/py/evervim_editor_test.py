@@ -1,34 +1,63 @@
-# encoding: utf-8    
+# encoding: utf-8
 # vim: sts=4 sw=4 fdm=marker
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import unittest
 from evervim_editor import EvervimEditor
-from evervim_editor import EvervimSetting
+from evervim_editor import EvervimPref
+
+import json
+testdata = json.load(open("evernoteapi_testdata.json"))
+
+USERNAME = testdata["username"]
+PASSWORD = testdata["password"]
+
 
 class TestEvervimEditor(unittest.TestCase):
     """ doc """
 
-    def setUp(self): #{{{
-        self.editor  = EvervimEditor()
+    def setUp(self):  # {{{
+        self.editor  = EvervimEditor.getInstance()
     #}}}
 
-    def testSetting(self): #{{{
-        setting = EvervimSetting()
-        self.assertIsNone(setting.workdir              )
-        self.assertIsNone(setting.username             )
-        self.assertIsNone(setting.password             )
-        self.assertIsNone(setting.sortnotes            )
-        self.assertIsNone(setting.sortnotebooks        )
-        self.assertIsNone(setting.sorttags             )
-        self.assertIsNone(setting.hidexmlheader        )
-        self.assertIsNone(setting.removeemptylineonxml )
-        self.assertIsNone(setting.xmlindent            )
-        self.assertIsNone(setting.usemarkdown          )
-        self.assertRaises(AttributeError, lambda:setting.zzzzzzzzzzzz )
+    def testPref(self):  # {{{
+        pref = EvervimPref.getInstance()
+        self.assertIsNone(pref.workdir)
+        self.assertIsNone(pref.username)
+        self.assertIsNone(pref.password)
+        self.assertIsNone(pref.sortnotes)
+        self.assertIsNone(pref.sortnotebooks)
+        self.assertIsNone(pref.sorttags)
+        self.assertIsNone(pref.hidexmlheader)
+        self.assertIsNone(pref.removeemptylineonxml)
+        self.assertIsNone(pref.xmlindent)
+        self.assertIsNone(pref.usemarkdown)
+        self.assertRaises(AttributeError, lambda: pref.zzzzzzzzzzzz)
+        self.assertRaises(RuntimeError, lambda: EvervimPref())
+
+    def testEditor(self):  # {{{
+        self.assertRaises(RuntimeError, lambda: EvervimEditor())
+
+    def testSetAPI(self):  # {{{
+        pref = EvervimPref.getInstance()
+        pref.username = None
+        pref.password = None
+        self.assertRaises(AttributeError, lambda: self.editor.setAPI())
+        self.setPrefUserName()
+        self.editor.setAPI()
+        self.assertTrue(True)
+
+    #}}}
+
+    def setPrefUserName(self):  # {{{
+        pref = EvervimPref.getInstance()
+        pref.username = USERNAME
+        pref.password = PASSWORD
     #}}}
 
 if __name__ == '__main__':
+    from time import localtime, strftime
+    print '\n**' + strftime("%a, %d %b %Y %H:%M:%S", localtime()) + '**\n'
 # profileを取るとき
 #   import test.pystone
 #   import cProfile

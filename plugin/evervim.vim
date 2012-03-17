@@ -279,7 +279,4 @@ sys.path.append(os.path.join(vim.eval('expand("<sfile>:p:h")'),'py/'))
 from evervimmer import Evervimmer
 EOF
 
-
-
-
 " vim: sts=4 sw=4 fdm=marker

@@ -22,6 +22,7 @@ class Evervimmer(object):
     def getInstance(self):
         if Evervimmer._instance is None:
             Evervimmer._instance = Evervimmer()
+            Evervimmer._instance.setPref()
 
         return Evervimmer._instance
 
@@ -50,16 +51,17 @@ class Evervimmer(object):
 
     """ prefs from vim option """
     def setPref(self):  # {{{
-        Evervimmer.pref.workdir              = vim.eval("g:workdir")
-        Evervimmer.pref.username             = vim.eval("g:username")
-        Evervimmer.pref.password             = vim.eval("s:password")
-        Evervimmer.pref.sortnotes            = vim.eval("g:sortnotes")
-        Evervimmer.pref.sortnotebooks        = vim.eval("g:sortnotebooks")
-        Evervimmer.pref.sorttags             = vim.eval("g:sorttags")
-        Evervimmer.pref.hidexmlheader        = vim.eval("g:hidexmlheader")
-        Evervimmer.pref.removeemptylineonxml = vim.eval("g:removeemptylineonxml")
-        Evervimmer.pref.xmlindent            = vim.eval("g:xmlindent")
-        Evervimmer.pref.usemarkdown          = vim.eval("g:usemarkdown")
+        self.pref.workdir              = vim.eval("g:evervim_workdir")
+        self.pref.username             = vim.eval("g:evervim_username")
+        self.pref.password             = vim.eval("s:evervim_password")
+        self.pref.sortnotes            = vim.eval("g:evervim_sortnotes")
+        self.pref.sortnotebooks        = vim.eval("g:evervim_sortnotebooks")
+        self.pref.sorttags             = vim.eval("g:evervim_sorttags")
+        self.pref.hidexmlheader        = vim.eval("g:evervim_hidexmlheader")
+        self.pref.removeemptylineonxml = vim.eval("g:evervim_removeemptylineonxml")
+        self.pref.xmlindent            = vim.eval("g:evervim_xmlindent")
+        self.pref.usemarkdown          = vim.eval("g:evervim_usemarkdown")
+        self.pref.encoding             = vim.eval('&enc')
     # }}}
 
     def setAPI(self):  # {{{
@@ -80,9 +82,9 @@ class Evervimmer(object):
         Evervimmer.notes = Evervimmer.api.notesByNotebook(selectnotebook)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
+        notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [notebook:%s]" % self.__u2s(selectnotebook.name))
+                " [notebook:%s]" % self.__changeEncodeToBuffer(selectnotebook.name))
     #}}}
 
     def sortNotes(self):  # {{{
@@ -101,9 +103,9 @@ class Evervimmer(object):
         Evervimmer.notes = Evervimmer.api.notesByTag(selecttag)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
+        notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [tag:%s]" % self.__u2s(selecttag.name))
+                " [tag:%s]" % self.__changeEncodeToBuffer(selecttag.name))
     #}}}
 
     def listNotebooks(self):  # {{{
@@ -116,11 +118,13 @@ class Evervimmer(object):
             Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
                                                     getattr(a, sortOpt[0])))
 
-        strs = [self.__u2s(notebook.name) for notebook in Evervimmer.notebooks]
+        strs = [self.__changeEncodeToBuffer(notebook.name) for notebook in Evervimmer.notebooks]
         self.__setBufferList(strs, " [all notebooks]")
     #}}}
 
     def listTags(self):  # {{{
+#       print vim.eval('&enc')
+        print Evervimmer.pref.encoding
         Evervimmer.tags = Evervimmer.api.listTags()
         sortOpt = vim.eval('g:evervim_sorttags').split()
         if sortOpt[1] == 'asc':
@@ -130,13 +134,14 @@ class Evervimmer(object):
             Evervimmer.tags.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
                                                getattr(a, sortOpt[0])))
 
-        strs = [self.__u2s(tag.name) for tag in Evervimmer.tags]
+        strs = [self.__changeEncodeToBuffer(tag.name) for tag in Evervimmer.tags]
+#       strs = [tag.name for tag in Evervimmer.tags]
         self.__setBufferList(strs, " [all tags]")
     #}}}
 
     def checkNote(self):  # {{{
         """ check note format """
-        bufstrs = [self.__s2u(line) for line in vim.current.buffer[:]]
+        bufstrs = [self.__changeEncodeFromBuffer(line) for line in vim.current.buffer[:]]
         if vim.eval('g:evervim_usemarkdown') != '0':
             title    = self.__getTitleFromMkdBuf(bufstrs)
             tags     = self.__getTagsFromMkdBuf(bufstrs)
@@ -198,7 +203,7 @@ class Evervimmer(object):
         Evervimmer.notes = Evervimmer.api.notesByQuery(query)
         self.sortNotes()
 
-        notetitles = [self.__u2s(note.title) for note in Evervimmer.notes]
+        notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles, " [query:%s]" % query)
 
     #}}}
@@ -245,8 +250,8 @@ class Evervimmer(object):
         @return note buffer String (markdown parsed from xml)
         """
         bufferStrings = []
-        title = self.__u2s(note.title)
-        tags = self.__u2s(','.join(note.tagNames))
+        title = self.__changeEncodeToBuffer(note.title)
+        tags = self.__changeEncodeToBuffer(','.join(note.tagNames))
 
         doc = minidom.parseString(note.content)
         mkd = markdownAndENML.parseENML(doc.documentElement)
@@ -264,8 +269,8 @@ class Evervimmer(object):
         @return note buffer String
         """
         bufferStrings = []
-        title = self.__u2s(note.title)
-        tags = self.__u2s(','.join(note.tagNames))
+        title = self.__changeEncodeToBuffer(note.title)
+        tags = self.__changeEncodeToBuffer(','.join(note.tagNames))
         doc = minidom.parseString(note.content)
         # format and convert
         contentxml = doc.toprettyxml(indent=vim.eval('g:evervim_xmlindent'), encoding='utf-8')
@@ -279,10 +284,10 @@ class Evervimmer(object):
 
         # remove empty lines
         if vim.eval('g:evervim_removeemptylineonxml') != '0':
-            for setline in ([self.__u2s(line) for line in contentxml.splitlines() if len(line.strip()) != 0]):
+            for setline in ([self.__changeEncodeToBuffer(line) for line in contentxml.splitlines() if len(line.strip()) != 0]):
                 lines.append(setline)
         else:
-            lines = [self.__u2s(line) for line in contentxml.splitlines()]
+            lines = [self.__changeEncodeToBuffer(line) for line in contentxml.splitlines()]
 
         bufferStrings.append(title)
         bufferStrings.append(tags)
@@ -308,16 +313,27 @@ class Evervimmer(object):
             return 0
     # }}}
 
-    def __u2s(self, string):  # {{{
-        """ change utf8 to shift-jis """
-        if(Evervimmer.windows):
+    def __changeEncodeFromBuffer(self, string):  # {{{
+        """ change &enc to utf-8 """
+        if(self.pref.encoding == 'utf-8'):
+            return string
+        else:
             try:
-                return unicode(string, 'utf-8').encode('sjis')
+                return unicode(string, self.pref.encoding).encode('utf-8')
             except:
                 return string
-        else:
-            return string
+
     # }}}
+
+    def __changeEncodeToBuffer(self, string):  # {{{
+        """ change utf-8 to &enc"""
+        if(self.pref.encoding == 'utf-8'):
+            return string
+        else:
+            try:
+                return unicode(string, 'utf-8').encode(self.pref.encoding)
+            except:
+                return string
 
     def __encode(self, unicodeData):  # {{{
         """ change unicode to output """
@@ -327,10 +343,3 @@ class Evervimmer(object):
             return unicodeData.encode('utf-8')
     # }}}
 
-    def __s2u(self, string):  # {{{
-        """ change shift-jis to utf-8 """
-        if(Evervimmer.windows):
-            return unicode(string, 'sjis').encode('utf-8')
-        else:
-            return string
-    # }}}

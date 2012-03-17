@@ -25,7 +25,6 @@ class EvervimPref(object):
         self.removeemptylineonxml = None
         self.xmlindent            = None
         self.usemarkdown          = None
-        EvervimPref.instance   = self
 
     @classmethod
     def getInstance(self):

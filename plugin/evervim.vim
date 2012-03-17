@@ -91,7 +91,7 @@ endfunction
 function! s:logincheck() " {{{
     python << EOF
 try:
-    Evervimmer().auth()
+    Evervimmer.getInstance().auth()
     print 'login successful.'
     f = open(os.path.join(vim.eval('g:evervim_workdir'),'account.txt'), 'w')
     f.write(vim.eval("g:evervim_username"))
@@ -120,7 +120,7 @@ function! s:setup() " {{{
     call s:setusername()
     call s:setpassword()
     echo 'login check...'
-    python Evervimmer().setAPI()
+    python Evervimmer.getInstance().setAPI()
     call s:logincheck()
 endfunction
 "}}}
@@ -132,7 +132,7 @@ function! s:notesByNotebook() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervimmer().notesByNotebook()
+    python Evervimmer.getInstance().notesByNotebook()
     setlocal nomodifiable
     
     map <silent> <buffer> <CR> :call <SID>getNote()<CR>
@@ -146,7 +146,7 @@ function! s:notesByTag() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervimmer().notesByTag()
+    python Evervimmer.getInstance().notesByTag()
     setlocal nomodifiable
     
     map <silent> <buffer> <CR> :call <SID>getNote()<CR>
@@ -162,7 +162,7 @@ function! s:getNote() " {{{
     call s:noteBufSetup()
  
     setlocal modifiable
-    python Evervimmer().getNote()
+    python Evervimmer.getInstance().getNote()
     exec 'silent! :w!'
 
     autocmd BufWritePost <buffer> call s:updateNote()
@@ -171,7 +171,7 @@ endfunction
 "}}}
 
 function! s:updateNote() " {{{
-    python Evervimmer().updateNote() 
+    python Evervimmer.getInstance().updateNote() 
 endfunction
 "}}}
 
@@ -179,7 +179,7 @@ function! s:notebookList() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervimmer().listNotebooks()
+    python Evervimmer.getInstance().listNotebooks()
     setlocal nomodifiable
 
     map <silent> <buffer> <CR> :call <SID>notesByNotebook()<CR>
@@ -189,7 +189,7 @@ endfunction
 function! s:evervimSearchByQuery(word) " {{{
     call s:listBufSetup()
     setlocal modifiable
-    python Evervimmer().searchByQuery()
+    python Evervimmer.getInstance().searchByQuery()
     setlocal nomodifiable
     map <silent> <buffer> <CR> call <SID>getNote()
 endfunction
@@ -206,7 +206,7 @@ endfunction
 "}}}
 
 function! s:createNote() " {{{
-    python Evervimmer().createNote() 
+    python Evervimmer.getInstance().createNote() 
     bwipeout
 endfunction
 "}}}
@@ -216,7 +216,7 @@ function! s:createNoteBuf() " {{{
 
     exec 'edit ' . l:tmpflile
     
-    python Evervimmer().createNoteBuf() 
+    python Evervimmer.getInstance().createNoteBuf() 
 
     autocmd BufWritePost <buffer> :call <SID>createNote()
 endfunction
@@ -226,7 +226,7 @@ function! s:listTags() " {{{
     call s:listBufSetup()
     
     setlocal modifiable
-    python Evervimmer().listTags()
+    python Evervimmer.getInstance().listTags()
     setlocal nomodifiable
 
     map <silent> <buffer> <CR> :call <SID>notesByTag()<CR>

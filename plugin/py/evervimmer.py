@@ -12,6 +12,20 @@ from xml.dom import minidom
 
 
 class Evervimmer(object):
+    _instance = None
+
+    def __init__(self):
+        if Evervimmer._instance is not None:
+            raise RuntimeError("EvervimPref must be one object!!!")
+
+    @classmethod
+    def getInstance(self):
+        if Evervimmer._instance is None:
+            Evervimmer._instance = Evervimmer()
+
+        return Evervimmer._instance
+
+
     """ interface to vim """
     # {{{
     try:

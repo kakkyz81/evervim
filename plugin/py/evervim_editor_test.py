@@ -3,6 +3,10 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import unittest
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'lib/'))
+import evernote.edam.type.ttypes as Types
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 
@@ -55,6 +59,37 @@ class TestEvervimEditor(unittest.TestCase):
         pref.password = PASSWORD
     #}}}
 
+    def testNote2buffer(self):  # {{{
+        editor = EvervimEditor.getInstance()
+        note = Types.Note()
+        note.title = u'タイトルテスト'.encode('utf-8')
+        note.tagNames = [u'タグ１'.encode('utf-8'), u'*タグ２'.encode('utf-8')]
+        note.content = u"""<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>this is content
+本文テスト
+<h3>たぐ３</h3>
+</en-note>
+""".encode('utf-8')
+        EvervimPref.getInstance().usemarkdown = '0'     # dont use markdown
+        EvervimPref.getInstance().xmlindent   = '    '  # default ts=4
+        xmlStrings = editor.note2buffer(note)
+        self.assertEqual(u'タイトルテスト'.encode('utf-8'), xmlStrings[0])
+        self.assertEqual(u'タグ１,*タグ２'.encode('utf-8'), xmlStrings[1])
+        self.assertEqual('this is content'.encode('utf-8'), xmlStrings[2])  # this is content
+        self.assertEqual('本文テスト'.encode('utf-8'), xmlStrings[3])       # 本文テスト
+        self.assertEqual('<h3>'.encode('utf-8'), xmlStrings[4])             # <h3>
+        self.assertEqual('    たぐ３'.encode('utf-8'), xmlStrings[5])       #     たぐ３
+        self.assertEqual('</h3>'.encode('utf-8'), xmlStrings[6])            # </h3>
+
+        EvervimPref.getInstance().usemarkdown = '1'  # dont use markdown
+        mkdStrings = editor.note2buffer(note)
+        self.assertEqual(u'# タイトルテスト [タグ１][*タグ２]'.encode('utf-8'), mkdStrings[0])
+        self.assertEqual('this is content'.encode('utf-8'), mkdStrings[1])
+        self.assertEqual('本文テスト'.encode('utf-8'), mkdStrings[2])
+        self.assertEqual('### たぐ３'.encode('utf-8'), mkdStrings[3])
+
+    # }}}
+
+
 if __name__ == '__main__':
     from time import localtime, strftime
     print '\n**' + strftime("%a, %d %b %Y %H:%M:%S", localtime()) + '**\n'
@@ -69,9 +104,9 @@ if __name__ == '__main__':
 #   p.print_stats()
 #
 # 全て流す時
-    unittest.main()
+#   unittest.main()
 #
 # 個別でテストするとき
-#   suite = unittest.TestSuite()
-#   suite.addTest(TestEvernoteAPI('testWhenUpdateNoteTagDelete'))
-#   unittest.TextTestRunner().run(suite)
+    suite = unittest.TestSuite()
+    suite.addTest(TestEvervimEditor('testNote2buffer'))
+    unittest.TextTestRunner().run(suite)

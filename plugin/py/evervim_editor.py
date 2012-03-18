@@ -3,6 +3,7 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import markdownAndENML
+import re
 from evernoteapi import EvernoteAPI
 from xml.dom import minidom
 
@@ -60,3 +61,22 @@ class EvervimEditor(object):
 
         self.api = EvernoteAPI(pref.username, pref.password)
 
+    def note2buffer(self, note):
+        """ return strings array for buffer from note. """
+        """ note has attribute title, tagNames, content """
+        bufStrings = []
+        pref = EvervimPref.getInstance()
+        doc = minidom.parseString(note.content)
+        ennote = doc.getElementsByTagName("en-note")[0]
+
+        if pref.usemarkdown == '0':
+            bufStrings.append(note.title)
+            bufStrings.append(",".join(note.tagNames))
+            contentxml = ennote.toprettyxml(indent=pref.xmlindent, encoding='utf-8')
+            contentxml = re.sub('^' + pref.xmlindent, '', contentxml, flags=re.MULTILINE)
+            bufStrings.extend([line for line in contentxml.splitlines()[1:-1] if line.strip()])
+        else:
+            titleline = '# {0} '.format(note.title) + "".join(['[{0}]'.format(tag) for tag in note.tagNames])
+            bufStrings.append(titleline)
+            bufStrings.extend(markdownAndENML.parseENML(ennote).splitlines())
+        return bufStrings

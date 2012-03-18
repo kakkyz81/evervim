@@ -131,7 +131,8 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
     >>> print lines[22]
     ### asuka.langley
     >>> #print "\\n".join(lines)
-    """  # }}}
+    """  
+    # }}}
 
 #   print node.toxml()
 #   print "{0}:{1}:{2}:{3}:{4}:{5}".format(

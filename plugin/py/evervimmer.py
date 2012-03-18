@@ -123,8 +123,6 @@ class Evervimmer(object):
     #}}}
 
     def listTags(self):  # {{{
-#       print vim.eval('&enc')
-        print Evervimmer.pref.encoding
         Evervimmer.tags = Evervimmer.api.listTags()
         sortOpt = vim.eval('g:evervim_sorttags').split()
         if sortOpt[1] == 'asc':
@@ -232,11 +230,7 @@ class Evervimmer(object):
         Evervimmer.currentnote = note
 
         vim.current.buffer[:] = None  # clear buffer
-
-        if vim.eval('g:evervim_usemarkdown') != '0':
-            lines = self.editNoteBufferByMarkdown(note)
-        else:
-            lines = self.editNoteBufferByXML(note)
+        lines = [ self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
 
         vim.current.buffer[0] = lines[0]
         for line in lines[1:]:

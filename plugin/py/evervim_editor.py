@@ -78,5 +78,6 @@ class EvervimEditor(object):
         else:
             titleline = '# {0} '.format(note.title) + "".join(['[{0}]'.format(tag) for tag in note.tagNames])
             bufStrings.append(titleline)
-            bufStrings.extend(markdownAndENML.parseENML(ennote).splitlines())
+            content = markdownAndENML.parseENML(ennote).encode('utf-8')
+            bufStrings.extend(content.splitlines())
         return bufStrings

@@ -26,6 +26,7 @@ class TestEvervimEditor(unittest.TestCase):
     #}}}
 
     def testPref(self):  # {{{
+        pref = EvervimPref._instance = None
         pref = EvervimPref.getInstance()
         self.assertIsNone(pref.workdir)
         self.assertIsNone(pref.username)
@@ -137,9 +138,9 @@ if __name__ == '__main__':
 #   p.print_stats()
 #
 # 全て流す時
-#   unittest.main()
+    unittest.main()
 #
 # 個別でテストするとき
-    suite = unittest.TestSuite()
-    suite.addTest(TestEvervimEditor('testBuffer2note'))
-    unittest.TextTestRunner().run(suite)
+#   suite = unittest.TestSuite()
+#   suite.addTest(TestEvervimEditor('testBuffer2note'))
+#   unittest.TextTestRunner().run(suite)

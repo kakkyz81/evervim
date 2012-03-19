@@ -5,7 +5,6 @@
 import vim
 import re
 import markdownAndENML
-from evernoteapi import EvernoteAPI
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 from xml.dom import minidom
@@ -23,17 +22,18 @@ class Evervimmer(object):
         if Evervimmer._instance is None:
             Evervimmer._instance = Evervimmer()
             Evervimmer._instance.setPref()
+            Evervimmer._instance.setAPI()
 
         return Evervimmer._instance
 
 
     """ interface to vim """
-    # {{{
-    try:
-        api = EvernoteAPI(vim.eval("g:evervim_username"),
-                vim.eval("s:evervim_password"))
-    except:
-        api = None
+#   # {{{
+#   try:
+#       api = EvernoteAPI(vim.eval("g:evervim_username"),
+#               vim.eval("s:evervim_password"))
+#   except:
+#       api = None
 
     # recentry loaded
     currentnote = None
@@ -73,13 +73,13 @@ class Evervimmer(object):
 
     def auth(self):  # {{{
         """ auth """
-        Evervimmer.api.auth()
+        Evervimmer.editor.api.auth()
     #}}}
 
     def notesByNotebook(self):  # {{{
         """ get notelist by notebook """
         selectnotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
-        Evervimmer.notes = Evervimmer.api.notesByNotebook(selectnotebook)
+        Evervimmer.notes = Evervimmer.editor.api.notesByNotebook(selectnotebook)
         self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
@@ -100,7 +100,7 @@ class Evervimmer(object):
 
     def notesByTag(self):  # {{{
         selecttag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
-        Evervimmer.notes = Evervimmer.api.notesByTag(selecttag)
+        Evervimmer.notes = Evervimmer.editor.api.notesByTag(selecttag)
         self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
@@ -109,7 +109,7 @@ class Evervimmer(object):
     #}}}
 
     def listNotebooks(self):  # {{{
-        Evervimmer.notebooks = Evervimmer.api.listNotebooks()
+        Evervimmer.notebooks = Evervimmer.editor.api.listNotebooks()
         sortOpt = vim.eval('g:evervim_sortnotebooks').split()
         if sortOpt[1] == 'asc':
             Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
@@ -123,7 +123,7 @@ class Evervimmer(object):
     #}}}
 
     def listTags(self):  # {{{
-        Evervimmer.tags = Evervimmer.api.listTags()
+        Evervimmer.tags = Evervimmer.editor.api.listTags()
         sortOpt = vim.eval('g:evervim_sorttags').split()
         if sortOpt[1] == 'asc':
             Evervimmer.tags.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
@@ -140,20 +140,13 @@ class Evervimmer(object):
     def checkNote(self):  # {{{
         """ check note format """
         bufstrs = [self.__changeEncodeFromBuffer(line) for line in vim.current.buffer[:]]
-        if vim.eval('g:evervim_usemarkdown') != '0':
-            title    = self.__getTitleFromMkdBuf(bufstrs)
-            tags     = self.__getTagsFromMkdBuf(bufstrs)
-            contents = self.__getContentsFromMkdBuf(bufstrs)
-        else:
-            title    = self.__getTitleFromXMLBuf(bufstrs)
-            tags     = self.__getTagsFromXMLBuf(bufstrs)
-            contents = self.__getContentsFromXMLBuf(bufstrs)
+        
+        note = self.editor.buffer2note(Evervimmer.currentnote, bufstrs)
 
-        print contents
-        print '-----------------------------------------'
-        note = Evervimmer.api.editNote(Evervimmer.currentnote, title, tags, contents)
+        print 'len:{0}'.format(len(note.content))
+        print 'content:{0}'.format(note.content)
+        print 'content:type{0}'.format(type(note.content))
 
-        print note.content
         minidom.parseString(note.content)
         Evervimmer.currentnote = note
 
@@ -192,13 +185,13 @@ class Evervimmer(object):
     def updateNote(self):  # {{{
         self.checkNote()
 
-        Evervimmer.api.updateNote(Evervimmer.currentnote)
+        Evervimmer.editor.api.updateNote(Evervimmer.currentnote)
         print 'update successful.'
     #}}}
 
     def searchByQuery(self):  # {{{
         query = vim.eval("a:word")
-        Evervimmer.notes = Evervimmer.api.notesByQuery(query)
+        Evervimmer.notes = Evervimmer.editor.api.notesByQuery(query)
         self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
@@ -207,9 +200,9 @@ class Evervimmer(object):
     #}}}
 
     def createNote(self):  # {{{
-        Evervimmer.currentnote = Evervimmer.api.newNote()
+        Evervimmer.currentnote = Evervimmer.editor.api.newNote()
         self.checkNote()
-        Evervimmer.api.createNote(Evervimmer.currentnote)
+        Evervimmer.editor.api.createNote(Evervimmer.currentnote)
     #}}}
 
     def createNoteBuf(self):  # {{{
@@ -226,7 +219,7 @@ class Evervimmer(object):
         currentline = int(vim.eval('l:pointer'))
         selectedNote = Evervimmer.notes[currentline - 2]
 
-        note = Evervimmer.api.getNote(selectedNote)
+        note = Evervimmer.editor.api.getNote(selectedNote)
         Evervimmer.currentnote = note
 
         vim.current.buffer[:] = None  # clear buffer

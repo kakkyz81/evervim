@@ -200,10 +200,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
 
 
 def parseMarkdown(mkdtext):  # {{{
-    #patch
-#   mkdtext = [line + "<br />"for line in mkdtext]
-#   print mkdtext
-    m = markdown.markdown(mkdtext)
+    m = markdown.markdown(mkdtext.decode('utf-8'))
     return m
 #}}}
 

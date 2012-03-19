@@ -128,19 +128,6 @@ g:evervim_sorttags				*g:evervim_sorttags*
 
 		初期値は'name asc'である。これは、名前の昇順という意味である。
 
-g:evervim_hidexmlheader				*g:evervim_hidexmlheader*
-		ノート本文のxmlのヘッダー部を隠すかどうかを設定する。
-		0の時、ヘッダー部を表示する。通常ヘッダー部を変更することは
-		ないため、この設定は変更すべきでない。
-		
-		初期値は1である。これは、ヘッダー部を隠すという意味である。
-
-g:evervim_removeemptylineonxml			*g:evervim_removeemptylineonxml*
-		ノート本文のxmlを表示する際、空白行を除去するかどうかを設定する。
-		0の時、空白行を残す。
-
-		初期値は1である。これは、空白行を除去するという意味である。
-
 g:evervim_xmlindent				*g:evervim_xmlindent*
 		ノート本文のxmlを整形する際のインデント文字列を設定する。
 

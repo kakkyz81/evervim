@@ -56,10 +56,9 @@ class Evervimmer(object):
         self.pref.sortnotes            = vim.eval("g:evervim_sortnotes")
         self.pref.sortnotebooks        = vim.eval("g:evervim_sortnotebooks")
         self.pref.sorttags             = vim.eval("g:evervim_sorttags")
-        self.pref.hidexmlheader        = vim.eval("g:evervim_hidexmlheader")
-        self.pref.removeemptylineonxml = vim.eval("g:evervim_removeemptylineonxml")
         self.pref.xmlindent            = vim.eval("g:evervim_xmlindent")
         self.pref.usemarkdown          = vim.eval("g:evervim_usemarkdown")
+#       self.pref.usemarkdown          = '0'
         self.pref.encoding             = vim.eval('&enc')
     # }}}
 
@@ -229,17 +228,13 @@ class Evervimmer(object):
 
         headre = re.compile('^' + vim.eval('g:evervim_xmlindent'))
         # remove header
-        if (vim.eval("g:evervim_hidexmlheader") != '0'):
-            contentxml = "\n".join(re.sub(headre, '', line) for line in contentxml.splitlines()[4:-1])
+        contentxml = "\n".join(re.sub(headre, '', line) for line in contentxml.splitlines()[4:-1])
 
         lines = []
 
         # remove empty lines
-        if vim.eval('g:evervim_removeemptylineonxml') != '0':
-            for setline in ([self.__changeEncodeToBuffer(line) for line in contentxml.splitlines() if len(line.strip()) != 0]):
-                lines.append(setline)
-        else:
-            lines = [self.__changeEncodeToBuffer(line) for line in contentxml.splitlines()]
+        for setline in ([self.__changeEncodeToBuffer(line) for line in contentxml.splitlines() if len(line.strip()) != 0]):
+            lines.append(setline)
 
         bufferStrings.append(title)
         bufferStrings.append(tags)

@@ -22,8 +22,6 @@ class EvervimPref(object):
         self.sortnotes            = None
         self.sortnotebooks        = None
         self.sorttags             = None
-        self.hidexmlheader        = None
-        self.removeemptylineonxml = None
         self.xmlindent            = None
         self.usemarkdown          = None
         self.encoding             = None

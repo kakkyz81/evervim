@@ -45,15 +45,6 @@ endif
 if !exists('g:evervim_sorttags') " (name) (asc|desc)
     let g:evervim_sorttags= 'name asc'
 endif
-" not show xmlheader and <en-note> tag (when 0, show header)
-if !exists('g:evervim_hidexmlheader')
-    let g:evervim_hidexmlheader= 1
-endif
-
-" contentのxmlで、空白だけの行は削除する
-if !exists('g:evervim_removeemptylineonxml')
-    let g:evervim_removeemptylineonxml = 1
-endif
 
 if !exists('g:evervim_xmlindent') " 
     let g:evervim_xmlindent= '    '

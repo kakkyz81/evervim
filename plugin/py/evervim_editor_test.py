@@ -33,8 +33,6 @@ class TestEvervimEditor(unittest.TestCase):
         self.assertIsNone(pref.sortnotes)
         self.assertIsNone(pref.sortnotebooks)
         self.assertIsNone(pref.sorttags)
-        self.assertIsNone(pref.hidexmlheader)
-        self.assertIsNone(pref.removeemptylineonxml)
         self.assertIsNone(pref.xmlindent)
         self.assertIsNone(pref.usemarkdown)
         self.assertRaises(AttributeError, lambda: pref.zzzzzzzzzzzz)

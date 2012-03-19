@@ -11,6 +11,7 @@ from xml.dom import minidom
 
 
 class Evervimmer(object):
+    """ interface to vim """
     _instance = None
 
     def __init__(self):
@@ -26,24 +27,11 @@ class Evervimmer(object):
 
         return Evervimmer._instance
 
-    """ interface to vim """
-#   # {{{
-#   try:
-#       api = EvernoteAPI(vim.eval("g:evervim_username"),
-#               vim.eval("s:evervim_password"))
-#   except:
-#       api = None
-
     # recentry loaded
     currentnote = None
     notes = []
     notebooks = []
     tags = []
-    # recentry loaded
-    """ if environment is windows then true """
-    windows = \
-        (vim.eval("has('win32')") != '0') or (vim.eval("has('win64')") != '0')
-    # }}}
 
     editor  = EvervimEditor.getInstance()
     pref = EvervimPref.getInstance()
@@ -58,7 +46,6 @@ class Evervimmer(object):
         self.pref.sorttags             = vim.eval("g:evervim_sorttags")
         self.pref.xmlindent            = vim.eval("g:evervim_xmlindent")
         self.pref.usemarkdown          = vim.eval("g:evervim_usemarkdown")
-#       self.pref.usemarkdown          = '0'
         self.pref.encoding             = vim.eval('&enc')
     # }}}
 
@@ -131,7 +118,6 @@ class Evervimmer(object):
                                                getattr(a, sortOpt[0])))
 
         strs = [self.__changeEncodeToBuffer(tag.name) for tag in Evervimmer.tags]
-#       strs = [tag.name for tag in Evervimmer.tags]
         self.__setBufferList(strs, " [all tags]")
     #}}}
 
@@ -140,10 +126,6 @@ class Evervimmer(object):
         bufstrs = [self.__changeEncodeFromBuffer(line) for line in vim.current.buffer[:]]
 
         note = self.editor.buffer2note(Evervimmer.currentnote, bufstrs)
-
-        print 'len:{0}'.format(len(note.content))
-        print 'content:{0}'.format(note.content)
-        print 'content:type{0}'.format(type(note.content))
 
         minidom.parseString(note.content)
         Evervimmer.currentnote = note
@@ -195,53 +177,6 @@ class Evervimmer(object):
 
     #}}}
 
-    def editNoteBufferByMarkdown(self, note):  # {{{
-        """
-        @param  note note from evernote
-        @return note buffer String (markdown parsed from xml)
-        """
-        bufferStrings = []
-        title = self.__changeEncodeToBuffer(note.title)
-        tags = self.__changeEncodeToBuffer(','.join(note.tagNames))
-
-        doc = minidom.parseString(note.content)
-        mkd = markdownAndENML.parseENML(doc.documentElement)
-
-        bufferStrings.append(title)
-        bufferStrings.append(tags)
-        bufferStrings += [self.__encode(line) for line in mkd.splitlines()]
-
-        return bufferStrings
-    #}}}
-
-    def editNoteBufferByXML(self, note):  # {{{
-        """
-        @param  note note from evernote
-        @return note buffer String
-        """
-        bufferStrings = []
-        title = self.__changeEncodeToBuffer(note.title)
-        tags = self.__changeEncodeToBuffer(','.join(note.tagNames))
-        doc = minidom.parseString(note.content)
-        # format and convert
-        contentxml = doc.toprettyxml(indent=vim.eval('g:evervim_xmlindent'), encoding='utf-8')
-
-        headre = re.compile('^' + vim.eval('g:evervim_xmlindent'))
-        # remove header
-        contentxml = "\n".join(re.sub(headre, '', line) for line in contentxml.splitlines()[4:-1])
-
-        lines = []
-
-        # remove empty lines
-        for setline in ([self.__changeEncodeToBuffer(line) for line in contentxml.splitlines() if len(line.strip()) != 0]):
-            lines.append(setline)
-
-        bufferStrings.append(title)
-        bufferStrings.append(tags)
-        bufferStrings += lines
-
-        return bufferStrings
-    #}}}
 # ----- private methods
 
     def __setBufferList(self, buffertitlelist, title):  # {{{
@@ -282,10 +217,3 @@ class Evervimmer(object):
             except:
                 return string
 
-    def __encode(self, unicodeData):  # {{{
-        """ change unicode to output """
-        if(Evervimmer.windows):
-            return unicodeData.encode('sjis')
-        else:
-            return unicodeData.encode('utf-8')
-    # }}}

@@ -210,7 +210,7 @@ function! s:createNoteBuf() " {{{
     python Evervimmer.getInstance().createNoteBuf() 
 
     if g:evervim_usemarkdown != '0'
-        set filetype=markdown
+        call s:markdownBufSetup()
     endif
 
     autocmd BufWritePost <buffer> :call <SID>createNote()
@@ -258,8 +258,17 @@ function! s:noteBufSetup() " {{{
     endif
 
     if g:evervim_usemarkdown != '0'
-        set filetype=markdown
+        call s:markdownBufSetup()
     endif
+
+endfunction
+
+function! s:markdownBufSetup() " {{{
+    set filetype=markdown
+    syn match evervimTagBase '^Tags:.*$' contains=evervimTagWord
+    syn keyword evervimTagWord Tags contained
+    hi link evervimTagBase Statement
+    hi link evervimTagWord Type
 endfunction
 "}}}
 

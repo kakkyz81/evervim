@@ -26,7 +26,6 @@ class Evervimmer(object):
 
         return Evervimmer._instance
 
-
     """ interface to vim """
 #   # {{{
 #   try:
@@ -140,7 +139,7 @@ class Evervimmer(object):
     def checkNote(self):  # {{{
         """ check note format """
         bufstrs = [self.__changeEncodeFromBuffer(line) for line in vim.current.buffer[:]]
-        
+
         note = self.editor.buffer2note(Evervimmer.currentnote, bufstrs)
 
         print 'len:{0}'.format(len(note.content))
@@ -152,34 +151,6 @@ class Evervimmer(object):
 
         if len(note.title) == 0:
             raise StandardError("*** must set title! ***")
-    #}}}
-
-    def __getTitleFromXMLBuf(self, strings):  # {{{
-        return strings[0]
-    #}}}
-
-    def __getTagsFromXMLBuf(self, strings):  # {{{
-        return strings[1]
-    #}}}
-
-    def __getContentsFromXMLBuf(self, strings):  # {{{
-        if (vim.eval("g:evervim_hidexmlheader") != '0'):
-            return [EvernoteAPI.NOTECONTENT_HEADER] + strings[2::] + [EvernoteAPI.NOTECONTENT_FOOTER]
-        else:
-            return strings[2::]
-    #}}}
-
-    def __getTitleFromMkdBuf(self, strings):  # {{{
-        return strings[0]
-    #}}}
-
-    def __getTagsFromMkdBuf(self, strings):  # {{{
-        return ""
-# TODO        return strings[1]
-    #}}}
-
-    def __getContentsFromMkdBuf(self, strings):  # {{{
-        return EvernoteAPI.NOTECONTENT_HEADER + markdownAndENML.parseMarkdown("".join(strings[2::])) + EvernoteAPI.NOTECONTENT_FOOTER
     #}}}
 
     def updateNote(self):  # {{{
@@ -206,13 +177,7 @@ class Evervimmer(object):
     #}}}
 
     def createNoteBuf(self):  # {{{
-        vim.current.buffer[:] = None   # clear buffer & 1 ( title )
-        vim.current.buffer.append('')  # 2 ( tag )
-        if (vim.eval("g:evervim_hidexmlheader") == '0'):
-            vim.current.buffer.append(EvernoteAPI.NOTECONTENT_HEADER)
-        vim.current.buffer.append('')
-        if (vim.eval("g:evervim_hidexmlheader") == '0'):
-            vim.current.buffer.append(EvernoteAPI.NOTECONTENT_FOOTER)
+        vim.current.buffer[:] = None   # clear buffer
     #}}}
 
     def getNote(self):  # {{{
@@ -223,7 +188,7 @@ class Evervimmer(object):
         Evervimmer.currentnote = note
 
         vim.current.buffer[:] = None  # clear buffer
-        lines = [ self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
+        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
 
         vim.current.buffer[0] = lines[0]
         for line in lines[1:]:
@@ -329,4 +294,3 @@ class Evervimmer(object):
         else:
             return unicodeData.encode('utf-8')
     # }}}
-

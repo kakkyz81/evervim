@@ -209,6 +209,10 @@ function! s:createNoteBuf() " {{{
     
     python Evervimmer.getInstance().createNoteBuf() 
 
+    if g:evervim_usemarkdown != '0'
+        set filetype=markdown
+    endif
+
     autocmd BufWritePost <buffer> :call <SID>createNote()
 endfunction
 "}}}
@@ -251,6 +255,10 @@ function! s:noteBufSetup() " {{{
     else
         exec ':lcd ' . g:evervim_workdir
         exec 'silent! hide edit __EVERVIM_NOTE__'
+    endif
+
+    if g:evervim_usemarkdown != '0'
+        set filetype=markdown
     endif
 endfunction
 "}}}

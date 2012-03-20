@@ -69,13 +69,13 @@ class EvervimEditor(object):
 
         if pref.usemarkdown == '0':
             bufStrings.append(note.title)
-            bufStrings.append(",".join(note.tagNames))
+            bufStrings.append("Tags:" + ",".join(note.tagNames))
             contentxml = ennote.toprettyxml(indent=pref.xmlindent, encoding='utf-8')
             contentxml = re.sub('^' + pref.xmlindent, '', contentxml, flags=re.MULTILINE)
             bufStrings.extend([line for line in contentxml.splitlines()[1:-1] if line.strip()])
         else:
-            titleline = '# {0} '.format(note.title) + "".join(['[{0}]'.format(tag) for tag in note.tagNames])
-            bufStrings.append(titleline)
+            bufStrings.append('# ' + note.title)
+            bufStrings.append("Tags:" + ",".join(note.tagNames))
             content = markdownAndENML.parseENML(ennote).encode('utf-8')
             bufStrings.extend(content.splitlines())
         return bufStrings

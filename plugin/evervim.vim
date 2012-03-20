@@ -112,6 +112,7 @@ function! s:setup() " {{{
     call s:setpassword()
     echo 'login check...'
     python Evervimmer.getInstance().setAPI()
+    python Evervimmer.getInstance().setPref()
     call s:logincheck()
 endfunction
 "}}}

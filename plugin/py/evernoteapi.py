@@ -56,17 +56,6 @@ class EvernoteAPI(object):
         return self.__getNoteStore().updateNote(authToken, note)
     #}}}
 
-    def editNote(self, note, title, tags, content):  # {{{
-        """
-        edit note by title(string), tags(string, camma separated), content(string)
-        """
-        note.title = title
-        self.editTag(note, tags)
-        note.content = content
-
-        return note
-    #}}}
-
     def editTag(self, note, tags):  # {{{
         """
         return note editted tag.

@@ -111,7 +111,8 @@ class TestEvervimEditor(unittest.TestCase):
 
         EvervimPref.getInstance().usemarkdown = '1' 
         note = Types.Note()
-        mkdBuffer = u"""# タイトルテスト [タグ１][\*タグ２]
+        mkdBuffer = u"""# タイトルテスト 
+タグ１,*タグ２
 this is content
 本文テスト
 ### たぐ３""".encode('utf-8')

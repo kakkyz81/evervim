@@ -32,14 +32,14 @@ class TestEvernoteAPI(unittest.TestCase):
     #}}}
 
     def testAuthFairueByUsername(self):  # {{{
-        api = EvernoteAPI('wrong_user_name_xxxxxxxx', PASSWORD) # must be exception
-        self.assertRaises(StandardError, lambda: {api.auth()}) # must be exception
+        api = EvernoteAPI('wrong_user_name_xxxxxxxx', PASSWORD)
+        self.assertRaises(StandardError, lambda: {api.auth()})
 
     #}}}
 
     def testAuthFairueByPassword(self):  # {{{
         api = EvernoteAPI(USERNAME, 'wrong_user_name_xxxxxxxx')
-        self.assertRaises(StandardError, lambda: {api.auth()}) # must be exception
+        self.assertRaises(StandardError, lambda: {api.auth()})
     #}}}
 
     def testListNoteBooks(self):  # {{{
@@ -47,8 +47,8 @@ class TestEvernoteAPI(unittest.TestCase):
         self.assertIsInstance(notebooks, list)
         self.assertNotEquals(0, len(notebooks))
         for notebook in notebooks:
-            self.assertTrue(hasattr(notebook,'guid'))
-            self.assertTrue(hasattr(notebook,'name'))
+            self.assertTrue(hasattr(notebook, 'guid'))
+            self.assertTrue(hasattr(notebook, 'name'))
     #}}}
 
     def testListTags(self):  # {{{
@@ -56,8 +56,8 @@ class TestEvernoteAPI(unittest.TestCase):
         self.assertIsInstance(tags , list)
         self.assertNotEquals(0, len(tags))
         for tag in tags:
-            self.assertTrue(hasattr(tag,'guid'))
-            self.assertTrue(hasattr(tag,'name'))
+            self.assertTrue(hasattr(tag, 'guid'))
+            self.assertTrue(hasattr(tag, 'name'))
 
     #}}}
 
@@ -103,7 +103,7 @@ class TestEvernoteAPI(unittest.TestCase):
     def testCreateNote(self):  # {{{
         note = Types.Note()
         editText = NOTECONTENT_HEADER + """this is content
-日本語"""+ NOTECONTENT_FOOTER
+日本語""" + NOTECONTENT_FOOTER
         note.title = "createNote"
         note.content = editText
         note = self.api.editTag(note, "tag1, newTag")
@@ -118,7 +118,7 @@ class TestEvernoteAPI(unittest.TestCase):
     def testWhenUpdateNoteTagDelete(self):  # {{{
         note = Types.Note()
         editText = NOTECONTENT_HEADER + """this is content
-日本語"""+ NOTECONTENT_FOOTER
+日本語""" + NOTECONTENT_FOOTER
         note.title = "createNote"
         note.content = editText
         note = self.api.editTag(note, "tag1, newTag")

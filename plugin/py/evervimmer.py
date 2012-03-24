@@ -40,7 +40,7 @@ class Evervimmer(object):
     def setPref(self):  # {{{
         self.pref.workdir              = vim.eval("g:evervim_workdir")
         self.pref.username             = vim.eval("g:evervim_username")
-        self.pref.password             = vim.eval("s:evervim_password")
+        self.pref.password             = vim.eval("g:evervim_password")
         self.pref.sortnotes            = vim.eval("g:evervim_sortnotes")
         self.pref.sortnotebooks        = vim.eval("g:evervim_sortnotebooks")
         self.pref.sorttags             = vim.eval("g:evervim_sorttags")

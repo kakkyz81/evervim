@@ -180,10 +180,12 @@ endfunction
 
 function! s:evervimSearchByQuery(word) " {{{
     call s:listBufSetup()
+
     setlocal modifiable
     python Evervimmer.getInstance().searchByQuery()
     setlocal nomodifiable
-    map <silent> <buffer> <CR> call <SID>getNote()
+
+    map <silent> <buffer> <CR> :call <SID>getNote()<CR>
 endfunction
 "}}}
 

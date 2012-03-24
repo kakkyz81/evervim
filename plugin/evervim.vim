@@ -63,6 +63,7 @@ function! s:setCommand() " {{{
     command! -nargs=+ EvervimmerSearchByQuery call s:evervimSearchByQuery(<q-args>)
     command! EvervimCreateNote call s:createNoteBuf()
     command! EvervimListTags call s:listTags()
+    command! EvervimReloadPref call s:setPref()
 endfunction
 "}}}
 
@@ -104,6 +105,12 @@ endfunction
 
 function! s:setpassword() " {{{
     let s:evervim_password = input('evernote password : ')
+endfunction
+"}}}
+
+function! s:setPref() " {{{
+    python Evervimmer.getInstance().setPref()
+    echo 'reload global variable for setting.'
 endfunction
 "}}}
 
@@ -259,6 +266,7 @@ function! s:noteBufSetup() " {{{
     endif
 
 endfunction
+"}}}
 
 function! s:markdownBufSetup() " {{{
     set filetype=markdown

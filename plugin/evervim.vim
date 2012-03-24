@@ -118,9 +118,6 @@ endfunction
 "}}}
 
 function! s:notesByNotebook() " {{{
-    if s:isTitle()
-        return
-    endif
     call s:listBufSetup()
     
     setlocal modifiable
@@ -132,9 +129,6 @@ endfunction
 "}}}
 
 function! s:notesByTag() " {{{
-    if s:isTitle()
-        return
-    endif
     call s:listBufSetup()
     
     setlocal modifiable

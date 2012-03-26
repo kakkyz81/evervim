@@ -65,13 +65,13 @@ endfunction
 "}}}
 
 function! s:loadAccount() " {{{
-    let accountfile = g:evervim_workdir . '/account.txt'
+    let accountfile = g:evervim_workdir . '/evervim_account.txt'
     if !filereadable(accountfile)
         return
     else
         let account = readfile(accountfile)
         let g:evervim_username = account[0]
-        let g:evervim_password = account[1]
+        let g:evervim_password = s:rot13(account[1])
     endif
 endfunction
 "command! EvervimmerLoadAccount call s:loadAccount()
@@ -101,7 +101,9 @@ function! s:setup() " {{{
     call s:setusername()
     call s:setpassword()
     echo 'login check...'
-    call evervim#setup()
+    if evervim#setup() == '1'
+        call s:setCommand()
+    endif
 endfunction
 "}}}
 
@@ -160,6 +162,30 @@ function! s:markdownBufSetup() " {{{
 endfunction
 "}}}
 
+function! s:rot13(word) " {{{
+    let wordlen = len(a:word)
+    let i = 0
+    let returnword = ''
+    while i < wordlen
+        let char = strpart(a:word, i, 1)
+        let num = char2nr(char)
+        if 65 <= num && num <= 77
+            let returnword .= nr2char(num + 13)
+        elseif 78 <= num && num <= 90
+            let returnword .= nr2char(num - 13)
+        elseif 97 <= num && num <= 109 
+            let returnword .= nr2char(num + 13)
+        elseif 110 <= num && num <= 122
+            let returnword .= nr2char(num - 13)
+        else
+            let returnword .= char
+        endif
+        let i += 1
+    endwhile
+    return returnword
+endfunction
+"command! -nargs=1 Evrot13 call s:rot13(<f-args>)
+"}}}
 " ---------------------------------------------------------------------------
 " setup
 " ---------------------------------------------------------------------------

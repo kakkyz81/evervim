@@ -11,20 +11,25 @@
 " ---------------------------------------------------------------------------
 " functions
 " ---------------------------------------------------------------------------
-function! evervim#logincheck(evervim_password) " {{{
+function! evervim#logincheck() " {{{
+    try
     python << EOF
 try:
     Evervimmer.getInstance().auth()
     print 'login successful.'
-    f = open(os.path.join(vim.eval('g:evervim_workdir'),'account.txt'), 'w')
+    f = open(os.path.join(vim.eval('g:evervim_workdir'),'evervim_account.txt'), 'w')
     f.write(vim.eval("g:evervim_username"))
     f.write("\n")
-    f.write(vim.eval("g:evervim_password"))
+    password = vim.eval("g:evervim_password")
+    f.write(password.encode('rot13'))
     f.close()
-    vim.command("call evervim#setCommand()")
 except StandardError, e:
     print e
 EOF
+catch
+    return '0'
+endtry
+    return '1'
 endfunction
 "}}}
 
@@ -34,10 +39,10 @@ function! evervim#setPref() " {{{
 endfunction
 "}}}
 
-function! evervim#setup(evervim_password) " {{{
+function! evervim#setup() " {{{
     python Evervimmer.getInstance().setAPI()
     python Evervimmer.getInstance().setPref()
-    call evervim#logincheck()
+    return evervim#logincheck()
 endfunction
 "}}}
 

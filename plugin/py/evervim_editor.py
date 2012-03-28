@@ -89,7 +89,7 @@ class EvervimEditor(object):
             note = self.api.editTag(note, buflines[1].replace('Tags:',''))
             note.content  = EvernoteAPI.NOTECONTENT_HEADER + "\n".join(buflines[2:]) + EvernoteAPI.NOTECONTENT_FOOTER
         else:
-            note.title = re.search('#([^\[]*)', buflines[0]).group(1).strip()
+            note.title = re.sub(r'^#','',buflines[0]).strip()
             note = self.api.editTag(note, buflines[1].replace('Tags:',''))
             parsedContent = markdownAndENML.parseMarkdown("\n".join(buflines[2:]))
             note.content  = EvernoteAPI.NOTECONTENT_HEADER + parsedContent.encode('utf-8') + EvernoteAPI.NOTECONTENT_FOOTER

@@ -41,6 +41,7 @@ class TestEvervimEditor(unittest.TestCase):
 
     def testEditor(self):  # {{{
         self.assertRaises(RuntimeError, lambda: EvervimEditor())
+    #}}}
 
     def testSetAPI(self):  # {{{
         pref = EvervimPref.getInstance()
@@ -50,7 +51,6 @@ class TestEvervimEditor(unittest.TestCase):
         self.setPrefUserName()
         self.editor.setAPI()
         self.assertTrue(True)
-
     #}}}
 
     def setPrefUserName(self):  # {{{
@@ -122,6 +122,22 @@ this is content
 
         mkdeditednote = editor.buffer2note(note, mkdBuffer.splitlines())
         self.assertEqual(u'タイトルテスト'.encode('utf-8'), mkdeditednote.title)
+        self.assertEqual([u'タグ１'.encode('utf-8'), u'*タグ２'.encode('utf-8')], mkdeditednote.tagNames)
+        self.assertEqual(EvernoteAPI.NOTECONTENT_HEADER + mkdConverted + EvernoteAPI.NOTECONTENT_FOOTER, mkdeditednote.content)
+
+        # 1行目の先頭が #で始まっていない場合も、テストが通ること
+        note = Types.Note() 
+        mkdBuffer = u"""タイトルテスト ### 途中#
+タグ１,*タグ２
+this is content
+本文テスト
+### たぐ３""".encode('utf-8')
+        mkdConverted = u"""<p>this is content
+本文テスト</p>
+<h3>たぐ３</h3>""".encode('utf-8')
+
+        mkdeditednote = editor.buffer2note(note, mkdBuffer.splitlines())
+        self.assertEqual(u'タイトルテスト ### 途中#'.encode('utf-8'), mkdeditednote.title)
         self.assertEqual([u'タグ１'.encode('utf-8'), u'*タグ２'.encode('utf-8')], mkdeditednote.tagNames)
         self.assertEqual(EvernoteAPI.NOTECONTENT_HEADER + mkdConverted + EvernoteAPI.NOTECONTENT_FOOTER, mkdeditednote.content)
     # }}}

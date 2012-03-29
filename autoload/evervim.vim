@@ -132,8 +132,9 @@ function! evervim#createNoteBuf() " {{{
     let l:tmpflile = tempname()
 
     exec 'edit ' . l:tmpflile
-    
-    python Evervimmer.getInstance().createNoteBuf() 
+    call append(0, ["", "Tags:"]) 
+    call cursor(1, 0)
+    setlocal nomodified
 
     if g:evervim_usemarkdown != '0'
         call evervim#markdownBufSetup()

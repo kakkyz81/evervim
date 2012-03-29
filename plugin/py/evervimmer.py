@@ -157,10 +157,6 @@ class Evervimmer(object):
         Evervimmer.editor.api.createNote(Evervimmer.currentnote)
     #}}}
 
-    def createNoteBuf(self):  # {{{
-        vim.current.buffer[:] = None   # clear buffer
-    #}}}
-
     def getNote(self):  # {{{
         currentline = int(vim.eval('l:pointer'))
         selectedNote = Evervimmer.notes[currentline - 2]

@@ -26,9 +26,23 @@ class TestEvernoteAPI(unittest.TestCase):
 
     def testAuth(self):  # {{{
         """ test auth """
+        self.api = EvernoteAPI(USERNAME, PASSWORD)
         self.api.auth()
         self.assertIsNotNone(self.api.user)
-        self.assertIsNotNone(self.api.authToken)
+        self.assertIsNotNone(self.api.refreshAuthDataTime)
+        self.assertIsNotNone(self.api.expirationDataTime )
+    #}}}
+
+    def testRefreshAuth(self):  # {{{
+        self.api = EvernoteAPI(USERNAME, PASSWORD)
+        self.api.auth()
+        token               = self.api.authToken
+        refreshAuthDataTime = self.api.refreshAuthDataTime
+        expirationDataTime  = self.api.expirationDataTime 
+        self.api.refreshAuth()
+        self.assertNotEqual(token               , self.api.authToken)
+        self.assertNotEqual(refreshAuthDataTime , self.api.refreshAuthDataTime)
+        self.assertNotEqual(expirationDataTime  , self.api.expirationDataTime)
     #}}}
 
     def testAuthFairueByUsername(self):  # {{{
@@ -162,6 +176,6 @@ if __name__ == '__main__':
 #
 # 個別でテストするとき
 #   suite = unittest.TestSuite()
-#   suite.addTest(TestEvernoteAPI('testAuthFairueByUsername'))
-#   suite.addTest(TestEvernoteAPI('testAuthFairueByPassword'))
+#   suite.addTest(TestEvernoteAPI('testAuth'))
+#   suite.addTest(TestEvernoteAPI('testRefreshAuth'))
 #   unittest.TextTestRunner().run(suite)

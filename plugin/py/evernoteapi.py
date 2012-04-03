@@ -8,6 +8,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib/'))
 import time
+from datetime import datetime, timedelta
 
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol
 import thrift.transport.THttpClient as THttpClient
@@ -154,8 +155,24 @@ class EvernoteAPI(object):
         # set the auth result.
         self.user = authResult.user
         self.authToken = authResult.authenticationToken
+        # authResult.expiration && currenttime is msec
+        self.__setAuthExpiration(authResult)
     #}}}
+
+    def refreshAuth(self):  # {{{
+        refreshedAuth = self.userStore.refreshAuthentication(self.authToken)
+        self.authToken = refreshedAuth.authenticationToken
+        self.__setAuthExpiration(refreshedAuth)
+    #}}}
+
 #### private methods.
+    def __setAuthExpiration(self, auth):  # {{{
+        now = datetime.now()
+        # authResult.expiration && currenttime is msec
+        authlimitsec = (auth.expiration  -  auth.currentTime) / 1000
+        self.refreshAuthDataTime = now + timedelta(seconds=authlimitsec * AUTH_REFRESH_LATE)
+        self.expirationDataTime = now + timedelta(seconds=authlimitsec)
+    #}}}
 
     def __setUserStore(self):  # {{{
         """ setup userStore. """
@@ -177,6 +194,13 @@ class EvernoteAPI(object):
         """ get authtoken.  """
         if not hasattr(self, 'authToken'):
             self.auth()
+
+        now = datetime.now()
+        if now > self.expirationDataTime:
+            #  auth runout
+            self.auth()
+        elif now > self.refreshAuthDataTime:
+            self.refreshAuth()
 
         return self.authToken
     #}}}
@@ -209,6 +233,10 @@ CONSUMER_SECRET = '960305afca85b6b0'
 #EVERNOTE_HOST = "sandbox.evernote.com"
 EVERNOTE_HOST = "www.evernote.com"
 USERSTORE_URI = "https://" + EVERNOTE_HOST + "/edam/user"
+CONSUMER_SECRET = '960305afca85b6b0'
+
 NOTESTORE_URIBASE = "https://" + EVERNOTE_HOST + "/edam/note/"
+
+AUTH_REFRESH_LATE = 0.6
 # }}}
 #  ---------------------------------------- eof ----------------------------------------

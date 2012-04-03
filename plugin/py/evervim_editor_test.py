@@ -38,6 +38,7 @@ class TestEvervimEditor(unittest.TestCase):
         self.assertIsNone(pref.usemarkdown)
         self.assertRaises(AttributeError, lambda: pref.zzzzzzzzzzzz)
         self.assertRaises(RuntimeError, lambda: EvervimPref())
+    # }}}
 
     def testEditor(self):  # {{{
         self.assertRaises(RuntimeError, lambda: EvervimEditor())

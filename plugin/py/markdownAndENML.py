@@ -48,16 +48,21 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
         elif tag == "ul":
             option.ul = True
             option.count = 0
+            result += "\n"
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
+            result += "\n"
             option.ul = False
         elif tag == "ol":
             option.ol = True
             option.count = 0
+            result += "\n"
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
+            result += "\n"
             option.ol = False
         elif tag == "pre":
             option.pre = True
             result += "".join([parseENML(child, level + 1, result, option) for child in node.childNodes])
+            result += "\n"
             option.pre = False
         elif tag == "code":
             option.code = True
@@ -72,6 +77,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
         elif tag == "blockquote":
             option.blockquote += 1
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
+            result += "\n"
             option.blockquote -= 1
         elif tag in ["img", "en-media", "en-todo", "en-crypt"]:  # 後で改行を除去して見やすくする？
             return node.toxml() + "\n"

@@ -79,9 +79,12 @@ function! evervim#getNote() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().getNote()
     exec 'silent! :w!'
+    augroup evervimNote
+        autocmd!
+        autocmd BufWritePost <buffer> call evervim#updateNote()
+        autocmd BufUnload <buffer> call delete(g:evervim_workdir . '/__EVERVIM_NOTE__')
+    augroup END
 
-    autocmd BufWritePost <buffer> call evervim#updateNote()
-    autocmd BufUnload <buffer> call delete(g:evervim_workdir . '/__EVERVIM_NOTE__')
 endfunction
 "}}}
 
@@ -140,7 +143,10 @@ function! evervim#createNoteBuf() " {{{
         call evervim#markdownBufSetup()
     endif
 
-    autocmd BufWritePost <buffer> :call evervim#createNote()
+    augroup evervimCreate
+        autocmd!
+        autocmd BufWritePost <buffer> :call evervim#createNote()
+    augroup evervimCreate END
 endfunction
 "}}}
 

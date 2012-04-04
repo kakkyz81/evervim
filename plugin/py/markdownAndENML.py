@@ -3,6 +3,8 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import markdown
+import xml.sax.saxutils
+import re
 
 
 class parserOption:  # {{{
@@ -13,19 +15,24 @@ class parserOption:  # {{{
         self.li         = False
         self.pre        = False
         self.code       = False
+        self.p          = False
         self.blockquote = 0
         self.count      = 0
 
     def __str__(self):
-        return "a={0} ul={1} ol={2} li={3} pre={4} code={5} blockquote={6} count={7} ".format(self.a,
+        return "a={0} ul={1} ol={2} li={3} pre={4} code={5} p={6} blockquote={7} count={8} ".format(self.a,
                self.ul,
                self.ol,
                self.li,
                self.pre,
                self.code,
+               self.p,
                self.blockquote,
                self.count)
 #}}}
+
+removeheadercode = re.compile('^<code>')
+removefootercode = re.compile('</code>$')
 
 
 def parseENML(node, level=0, result='', option=parserOption()):  # {{{
@@ -48,26 +55,32 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
         elif tag == "ul":
             option.ul = True
             option.count = 0
-            result += "\n"
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
             result += "\n"
             option.ul = False
         elif tag == "ol":
             option.ol = True
             option.count = 0
-            result += "\n"
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
             result += "\n"
             option.ol = False
         elif tag == "pre":
             option.pre = True
             result += "".join([parseENML(child, level + 1, result, option) for child in node.childNodes])
-            result += "\n"
             option.pre = False
         elif tag == "code":
             option.code = True
-            result += "".join([parseENML(child, level + 1, result, option) for child in node.childNodes])
+            precode = removeheadercode.sub('', xml.sax.saxutils.unescape(node.toxml()))
+            precode = removefootercode.sub('', precode)
+            for line in precode.splitlines():
+                result += "    %s\n" % line.rstrip()
+            result += "\n"
             option.code = False
+        elif tag == "p":
+            option.p = True
+            result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
+            result += "\n"
+            option.p = False
         elif tag == "li":
             option.count += 1
             if option.ul:
@@ -90,8 +103,6 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
         if _getData(node).strip():
             if option.blockquote > 0:
                 result += "> " * option.blockquote + _getData(node)
-            elif option.pre and option.code:
-                result += "\n".join(["    " + line for line in _getData(node).splitlines()])
             else:
                 result += _getData(node)
             if option.a == False:

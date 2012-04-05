@@ -3,8 +3,6 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import vim
-import re
-import markdownAndENML
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 from xml.dom import minidom
@@ -214,4 +212,3 @@ class Evervimmer(object):
                 return unicode(string, 'utf-8').encode(self.pref.encoding)
             except:
                 return string
-

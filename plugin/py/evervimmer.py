@@ -154,7 +154,9 @@ class Evervimmer(object):
     def createNote(self):  # {{{
         Evervimmer.currentnote = Evervimmer.editor.api.newNote()
         self.checkNote()
-        Evervimmer.editor.api.createNote(Evervimmer.currentnote)
+        createdNote = Evervimmer.editor.api.createNote(Evervimmer.currentnote)
+        Evervimmer.currentnote = createdNote
+        print 'create successful.'
     #}}}
 
     def getNote(self):  # {{{

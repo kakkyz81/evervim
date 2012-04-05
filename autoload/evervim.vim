@@ -79,15 +79,19 @@ function! evervim#getNote() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().getNote()
     exec 'silent! :w!'
+    call evervim#setBufAutocmdWhenWritePost()
+endfunction
+"}}}
+
+function! evervim#setBufAutocmdWhenWritePost() " {{{
     augroup evervimNote
         autocmd!
         autocmd BufWritePost <buffer> call evervim#updateNote()
         autocmd BufUnload <buffer> call delete(g:evervim_workdir . '/__EVERVIM_NOTE__')
     augroup END
-
 endfunction
 "}}}
-
+"}}}
 function! evervim#updateNote() " {{{
     python Evervimmer.getInstance().updateNote() 
 endfunction
@@ -127,16 +131,23 @@ endfunction
 
 function! evervim#createNote() " {{{
     python Evervimmer.getInstance().createNote() 
-    bwipeout
+    " clear Create autocmd
+    augroup evervimCreate
+        autocmd!
+    augroup END
+    call evervim#setBufAutocmdWhenWritePost()
 endfunction
 "}}}
 
 function! evervim#createNoteBuf() " {{{
-    let l:tmpflile = tempname()
+    call evervim#noteBufSetup()
 
-    exec 'edit ' . l:tmpflile
-    call append(0, ["", "Tags:"]) 
-    call cursor(1, 0)
+    silent %delete _
+
+    " clear buffer
+    call append(0, "")
+    call append(1, "Tags:")
+    call cursor(1,0)
     setlocal nomodified
 
     if g:evervim_usemarkdown != '0'

@@ -200,7 +200,7 @@ function! evervim#noteBufSetup() " {{{
     else
         " buffer is nott opened , open it.
         exec ':lcd ' . g:evervim_workdir
-        exec 'silent! hide edit __EVERVIM_NOTE__'
+        exec 'silent! rightbelow vsplit __EVERVIM_NOTE__'
     endif
 
     if g:evervim_usemarkdown != '0'

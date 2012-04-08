@@ -194,9 +194,11 @@ function! evervim#noteBufSetup() " {{{
 " __EVERVIM_NOTE__というバッファがカレントで表示されているか調べ、ない場合は開く。
 " __EVERVIM_NOTE__は作業用ディレクトリに保存され、バッファのアンロード時に削除
 " される
-    if getreg('%') == '__EVERVIM_NOTE__'
-        " already open, nothing do
+    let bufnr = bufwinnr('__EVERVIM_NOTE__')
+    if bufnr > 0
+        exec bufnr.'wincmd w'
     else
+        " buffer is nott opened , open it.
         exec ':lcd ' . g:evervim_workdir
         exec 'silent! hide edit __EVERVIM_NOTE__'
     endif

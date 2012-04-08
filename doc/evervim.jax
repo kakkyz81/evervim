@@ -1,6 +1,6 @@
 *evervim.txt*	evernoteをvimで編集する。
 
-Version: 0.0.1
+Version: 0.2.0
 Author : kakkyz <kakkyz81@gmail.com>
 Japanese Documentation Author: kakkyz
 License: MIT license  
@@ -15,7 +15,6 @@ License: MIT license
   コマンド		  |evervim-commands|
   変数			  |evervim-variables|
 ToDo			|evervim-todo|
-既知のバグ		|evervim-bugs|
 更新履歴		|evervim-changelog|
 
 ==============================================================================
@@ -23,6 +22,8 @@ ToDo			|evervim-todo|
 
 *evervim* (または *evervim.vim* ) はevernote(http://www.evernote.com)のノート
 をvimから編集することを目的に作成されたプラグインである。
+ノートは、markdown形式またはXML形式で編集することができる。 
+詳しくは、*g:evervim_usemarkdown* を参照すること。
 
 ==============================================================================
 必要なもの						*evervim-requires*
@@ -58,11 +59,10 @@ pythonが有効かどうかは、
 そのノートブック内のノートが表示される。
 ノートの上で再度<CR>を押すと、対象のノートが表示される。
 
-ノートはデフォルトでは、
+ノートは
 1行目がタイトル
 2行目がタグ(カンマ区切り)
 3行目以下が本文となっている。
-本文は、xml文書で指定されているため、タグを含めて表示される。
 
 ==============================================================================
 インターフェース				*evervim-interface*
@@ -75,22 +75,25 @@ pythonが有効かどうかは、
 		ノートブックを選択して、<CR>を押すことでそのノートブックの
 		ノート一覧を表示する。
 
-:EvervimListTags				*:EvervimListTags
+:EvervimListTags				*:EvervimListTags*
 		タグの一覧を表示する。
 		タグを選択して、<CR>を押すことでそのタグの
 		ノート一覧を表示する。
 
-:EvervimSearchByQuery  {query}			*:EvervimSearchByQuery
+:EvervimSearchByQuery  {query}			*:EvervimSearchByQuery*
 		検索文字列を指定して、ヒットしたノートの一覧を表示する。
 		検索文字列の書式は以下を参考にせよ
-		https://www.evernote.com/about/kb/article/advanced-search
+		http://dev.evernote.com/documentation/cloud/chapters/search_grammar.php#Search_Terms
 
-:EvervimCreateNote	  			*:EvervimCreateNote
+:EvervimCreateNote	  			*:EvervimCreateNote*
 		新規ノートを保存するためのバッファが開かれる。
 		バッファの保存時にノートがEvernoteに保存される
 
-:EvervimSetup					*:EvervimSetup
+:EvervimSetup					*:EvervimSetup*
 		アカウントのセットアップを行う。
+
+:EvervimReloadPref				*:EvervimReloadPref*
+		変数の再読み込みを行う。通常は使用しない。
 ------------------------------------------------------------------------------
 変数						*evervim-variables*
 
@@ -110,11 +113,24 @@ g:evervim_password				*g:evervim_password*
 		
 		初期値は空文字である。
 
+g:evervim_usemarkdown				*g:evervim_usemarkdown*
+		ノートの編集にmarkdown形式を用いるかを示す。
+		ノートの編集は、markdown形式か、生のXMLを編集する形式の２つの
+		モードで行える。
+
+		** 警告: markdown形式では、ノートのデザイン用の書式の大半が失
+		われる。既存のデザインされたノートをevervimで開いて保存する
+		と、それらの書式は失われてしまう。 **
+
+		初期値は'1'である。これは、markdown形式を用いるということであ
+		る。
+
 g:evervim_sortnotes				*g:evervim_sortnotes*
 		ノートの一覧のソート順を示す。とりうる値は以下。
 		(updated | created | title) (asc | desc)
 
-		初期値は'updated desc'である。これは、更新日の降順という意味である。
+		初期値は'updated desc'である。
+		これは、更新日の降順という意味である。
 
 g:evervim_sortbooks				*g:evervim_sortnotebooks*
 		ノートブックの一覧のソート順を示す。とりうる値は以下。
@@ -129,21 +145,25 @@ g:evervim_sorttags				*g:evervim_sorttags*
 		初期値は'name asc'である。これは、名前の昇順という意味である。
 
 g:evervim_xmlindent				*g:evervim_xmlindent*
-		ノート本文のxmlを整形する際のインデント文字列を設定する。
+		ノートを生のXMLで編集する際に、xmlを整形する際の
+		インデント文字列を設定する。
 
 		初期値は'    'である。
 
 ==============================================================================
 TODO						*evervim-todo*
-・ドキュメントの充実
-・リスト操作時の前に戻る機能の実装
-
-==============================================================================
-既知のバグ					*evervim-bugs*
+・英語版ドキュメントの質向上。(I need help!)
+・操作性の向上（戻る機能等）
+・Unite対応
 
 ==============================================================================
 更新履歴					*evervim-changelog*
 
-	0.0.1		2011-05-05	1st release.
+Ver.0.0.1:2011-05-05
+- 1st release.
+
+Ver.0.2.0:2012-04-05
+- Enable markdown format, and many cahnges.
+
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

@@ -86,7 +86,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             if option.ul:
                 result += "* " + "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
             if option.ol:
-                result += str(option.count) + "." + "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
+                result += str(option.count) + ". " + "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])
         elif tag == "blockquote":
             option.blockquote += 1
             result += "".join([parseENML(child, level + 1, "", option) for child in node.childNodes])

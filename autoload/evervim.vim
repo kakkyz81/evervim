@@ -154,10 +154,13 @@ function! evervim#createNoteBuf() " {{{
         call evervim#markdownBufSetup()
     endif
 
+    augroup evervimNote
+        autocmd!
+    augroup END
     augroup evervimCreate
         autocmd!
         autocmd BufWritePost <buffer> :call evervim#createNote()
-    augroup evervimCreate END
+    augroup END
 endfunction
 "}}}
 

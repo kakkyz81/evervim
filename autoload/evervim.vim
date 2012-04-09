@@ -177,16 +177,16 @@ endfunction
 
 function! evervim#listBufSetup() " {{{
 " __EVERVIM_LIST__というバッファがカレントで表示されているか調べ、ない場合は縦分割で開く。
-    if getreg('%') == '__EVERVIM_LIST__'
+    let bufnr = bufwinnr('__EVERVIM_LIST__')
+    if bufnr > 0
         " already open, nothing do
+        exec bufnr.'wincmd w'
     else
         exec ':lcd ' . g:evervim_workdir
         exec "vsp __EVERVIM_LIST__"
         setlocal noshowcmd
         setlocal noswapfile
         setlocal buftype=nofile
-    "   setlocal bufhidden=delete
-    "   setlocal nobuflisted
         setlocal nowrap
         setlocal nonumber
     endif

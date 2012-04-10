@@ -130,12 +130,16 @@ endfunction
 "}}}
 
 function! evervim#createNote() " {{{
-    python Evervimmer.getInstance().createNote() 
-    " clear Create autocmd
-    augroup evervimCreate
-        autocmd!
-    augroup END
-    call evervim#setBufAutocmdWhenWritePost()
+    try
+        python Evervimmer.getInstance().createNote() 
+        " clear Create autocmd
+        augroup evervimCreate
+            autocmd!
+        augroup END
+        call evervim#setBufAutocmdWhenWritePost()
+    catch
+        echoerr 'createNote error! aborted.'
+    endtry
 endfunction
 "}}}
 

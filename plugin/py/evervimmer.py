@@ -3,6 +3,8 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import vim
+import sys
+import traceback
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 from xml.dom import minidom
@@ -150,11 +152,15 @@ class Evervimmer(object):
     #}}}
 
     def createNote(self):  # {{{
-        Evervimmer.currentnote = Evervimmer.editor.api.newNote()
-        self.checkNote()
-        createdNote = Evervimmer.editor.api.createNote(Evervimmer.currentnote)
-        Evervimmer.currentnote = createdNote
-        print 'create successful.'
+        try:
+            Evervimmer.currentnote = Evervimmer.editor.api.newNote()
+            self.checkNote()
+            createdNote = Evervimmer.editor.api.createNote(Evervimmer.currentnote)
+            Evervimmer.currentnote = createdNote
+            print 'create successful.'
+        except:
+            print traceback.format_exc(sys.exc_info()[2])
+            raise StandardError("createNote error! aborted.")
     #}}}
 
     def getNote(self):  # {{{

@@ -137,6 +137,7 @@ function! evervim#createNote() " {{{
             autocmd!
         augroup END
         call evervim#setBufAutocmdWhenWritePost()
+        echomsg 'create normal finish'
     catch
         echoerr 'createNote error! aborted.'
     endtry

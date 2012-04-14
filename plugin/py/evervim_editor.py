@@ -81,19 +81,17 @@ class EvervimEditor(object):
             bufStrings.extend(content.splitlines())
         return bufStrings
 
-
     def buffer2note(self, note, buflines):
         """ return note that set title, tags, content from buftext """
         pref = EvervimPref.getInstance()
         if pref.usemarkdown == '0':
             note.title = buflines[0]
-            note = self.api.editTag(note, buflines[1].replace('Tags:',''))
+            note = self.api.editTag(note, buflines[1].replace('Tags:', ''))
             note.content  = EvernoteAPI.NOTECONTENT_HEADER + "\n".join(buflines[2:]) + EvernoteAPI.NOTECONTENT_FOOTER
         else:
-            note.title = re.sub(r'^#','',buflines[0]).strip()
-            note = self.api.editTag(note, buflines[1].replace('Tags:',''))
+            note.title = re.sub(r'^#', '',buflines[0]).strip()
+            note = self.api.editTag(note, buflines[1].replace('Tags:', ''))
             parsedContent = markdownAndENML.parseMarkdown("\n".join(buflines[2:]))
             note.content  = EvernoteAPI.NOTECONTENT_HEADER + parsedContent.encode('utf-8') + EvernoteAPI.NOTECONTENT_FOOTER
 
         return note
-

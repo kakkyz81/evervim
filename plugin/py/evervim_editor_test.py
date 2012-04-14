@@ -93,7 +93,7 @@ class TestEvervimEditor(unittest.TestCase):
     def testBuffer2note(self):  # {{{
         editor = EvervimEditor.getInstance()
         pref = EvervimPref.getInstance()
-        pref.username = USERNAME 
+        pref.username = USERNAME
         pref.password = PASSWORD
         editor.setAPI()
         note = Types.Note()
@@ -110,9 +110,9 @@ class TestEvervimEditor(unittest.TestCase):
         self.assertEqual([u'タグ１'.encode('utf-8'), u'*タグ２'.encode('utf-8')], editednote.tagNames)
         self.assertEqual(EvernoteAPI.NOTECONTENT_HEADER + xmlBufferContent + EvernoteAPI.NOTECONTENT_FOOTER, editednote.content)
 
-        EvervimPref.getInstance().usemarkdown = '1' 
+        EvervimPref.getInstance().usemarkdown = '1'
         note = Types.Note()
-        mkdBuffer = u"""# タイトルテスト 
+        mkdBuffer = u"""# タイトルテスト
 タグ１,*タグ２
 this is content
 本文テスト
@@ -127,7 +127,7 @@ this is content
         self.assertEqual(EvernoteAPI.NOTECONTENT_HEADER + mkdConverted + EvernoteAPI.NOTECONTENT_FOOTER, mkdeditednote.content)
 
         # 1行目の先頭が #で始まっていない場合も、テストが通ること
-        note = Types.Note() 
+        note = Types.Note()
         mkdBuffer = u"""タイトルテスト ### 途中#
 タグ１,*タグ２
 this is content

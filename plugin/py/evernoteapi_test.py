@@ -30,7 +30,7 @@ class TestEvernoteAPI(unittest.TestCase):
         self.api.auth()
         self.assertIsNotNone(self.api.user)
         self.assertIsNotNone(self.api.refreshAuthDataTime)
-        self.assertIsNotNone(self.api.expirationDataTime )
+        self.assertIsNotNone(self.api.expirationDataTime)
     #}}}
 
     def testRefreshAuth(self):  # {{{
@@ -38,7 +38,7 @@ class TestEvernoteAPI(unittest.TestCase):
         self.api.auth()
         token               = self.api.authToken
         refreshAuthDataTime = self.api.refreshAuthDataTime
-        expirationDataTime  = self.api.expirationDataTime 
+        expirationDataTime  = self.api.expirationDataTime
         self.api.refreshAuth()
         self.assertNotEqual(token               , self.api.authToken)
         self.assertNotEqual(refreshAuthDataTime , self.api.refreshAuthDataTime)

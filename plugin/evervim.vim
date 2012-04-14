@@ -50,6 +50,11 @@ endif
 if !exists('g:evervim_usemarkdown') "
     let g:evervim_usemarkdown= 1 
 endif
+
+if !exists('g:evervim_asyncupdate') "
+    let g:evervim_asyncupdate = 1
+endif
+
 ""}}}
 
 " ---------------------------------------------------------------------------

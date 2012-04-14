@@ -5,6 +5,8 @@
 import vim
 import sys
 import traceback
+import threading
+import copy
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 from xml.dom import minidom
@@ -46,6 +48,7 @@ class Evervimmer(object):
         self.pref.sorttags             = vim.eval("g:evervim_sorttags")
         self.pref.xmlindent            = vim.eval("g:evervim_xmlindent")
         self.pref.usemarkdown          = vim.eval("g:evervim_usemarkdown")
+        self.pref.asyncupdate          = vim.eval("g:evervim_asyncupdate")
         self.pref.encoding             = vim.eval('&enc')
     # }}}
 
@@ -134,11 +137,23 @@ class Evervimmer(object):
             raise StandardError("*** must set title! ***")
     #}}}
 
+    def updateNoteInthread(self, note):  # {{{
+        Evervimmer.editor.api.updateNote(note)
+        vim.command("echo 'evernote update successful.'")
+    #}}}
+
     def updateNote(self):  # {{{
         self.checkNote()
+        if self.pref.asyncupdate == '1':
+            note = copy.deepcopy(Evervimmer.currentnote)
+            if hasattr(self, 'updatethread') and self.updatethread.isAlive():
+                vim.command("echohl WarningMsg | echomsg 'now updating... so not update this save. do save buffer later.' | echohl None")
+                return
 
-        Evervimmer.editor.api.updateNote(Evervimmer.currentnote)
-        print 'update successful.'
+            self.updatethread = threading.Thread(target=self.updateNoteInthread, args=(note,))
+            self.updatethread.start()
+        else:
+            Evervimmer.editor.api.updateNote(Evervimmer.currentnote)
     #}}}
 
     def searchByQuery(self):  # {{{

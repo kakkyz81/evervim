@@ -25,6 +25,7 @@ class EvervimPref(object):
         self.xmlindent            = None
         self.usemarkdown          = None
         self.encoding             = None
+        self.asyncupdate          = None
 
     @classmethod
     def getInstance(self):

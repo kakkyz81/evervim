@@ -142,6 +142,15 @@ g:evervim_xmlindent				*g:evervim_xmlindent*
 
 		Default is '    '.
 
+g:evervim_asyncupdate				*g:evervim_asyncupdate*
+		This value means When save note,
+		asynchronous update to evernote or not.
+		
+		Default is '1'. Tt means asynchronous update.
+		Asynchronous update is not runnning multi.
+		So if one thread runnning, not update to evernote.
+		Next timing of saving buffer, update to evernote.
+
 ==============================================================================
 TODO						*evervim-todo*
 ・Improve English document.(You know, I'm not use English well, I needs help!)
@@ -156,6 +165,9 @@ Ver.0.0.1:2011-05-05
 
 Ver.0.2.0:2012-04-10
 - Enable markdown format(thx zhaocai!), and many changes.
+
+Ver.0.2.1:2012-04-14
+- add g:evervim_asyncupdate , use thread when buffer write for speed up.
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

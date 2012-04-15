@@ -172,7 +172,6 @@ class Evervimmer(object):
             self.checkNote()
             createdNote = Evervimmer.editor.api.createNote(Evervimmer.currentnote)
             Evervimmer.currentnote = createdNote
-            print 'create successful.'
         except:
             print traceback.format_exc(sys.exc_info()[2])
             raise StandardError("createNote error! aborted.")

@@ -43,7 +43,6 @@ class Evervimmer(object):
         self.pref.workdir              = vim.eval("g:evervim_workdir")
         self.pref.username             = vim.eval("g:evervim_username")
         self.pref.password             = vim.eval("g:evervim_password")
-        self.pref.sortnotes            = vim.eval("g:evervim_sortnotes")
         self.pref.sortnotebooks        = vim.eval("g:evervim_sortnotebooks")
         self.pref.sorttags             = vim.eval("g:evervim_sorttags")
         self.pref.xmlindent            = vim.eval("g:evervim_xmlindent")
@@ -68,28 +67,15 @@ class Evervimmer(object):
         """ get notelist by notebook """
         selectnotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
         Evervimmer.notes = Evervimmer.editor.api.notesByNotebook(selectnotebook)
-        self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
                 " [notebook:%s]" % self.__changeEncodeToBuffer(selectnotebook.name))
     #}}}
 
-    def sortNotes(self):  # {{{
-        sortOpt = vim.eval('g:evervim_sortnotes').split()
-        if sortOpt[1] == 'asc':
-            Evervimmer.notes.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
-                                                getattr(b, sortOpt[0])))
-        else:
-            Evervimmer.notes.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
-                                                getattr(a, sortOpt[0])))
-
-    #}}}
-
     def notesByTag(self):  # {{{
         selecttag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
         Evervimmer.notes = Evervimmer.editor.api.notesByTag(selecttag)
-        self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
@@ -159,7 +145,6 @@ class Evervimmer(object):
     def searchByQuery(self):  # {{{
         query = vim.eval("a:word")
         Evervimmer.notes = Evervimmer.editor.api.notesByQuery(query)
-        self.sortNotes()
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles, " [query:%s]" % query)

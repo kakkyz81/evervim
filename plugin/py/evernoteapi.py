@@ -100,6 +100,7 @@ class EvernoteAPI(object):
         """
         noteFilter = NoteStore.NoteFilter()
         noteFilter.words = query
+        noteFilter.order = Types.NoteSortOrder.UPDATED
 
         authToken = self.__getAuthToken()
         return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
@@ -109,6 +110,7 @@ class EvernoteAPI(object):
         """ return note by notebook(notebook object). TODO:edit noteFilter more """
         noteFilter = NoteStore.NoteFilter()
         noteFilter.notebookGuid = notebook.guid
+        noteFilter.order = Types.NoteSortOrder.UPDATED
 
         authToken = self.__getAuthToken()
         return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
@@ -118,6 +120,7 @@ class EvernoteAPI(object):
         """ return note by tag(tag object). TODO:edit noteFilter more """
         noteFilter = NoteStore.NoteFilter()
         noteFilter.tagGuids = [tag.guid]
+        noteFilter.order = Types.NoteSortOrder.UPDATED
 
         authToken = self.__getAuthToken()
         return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes

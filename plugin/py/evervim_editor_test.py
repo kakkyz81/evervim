@@ -31,7 +31,6 @@ class TestEvervimEditor(unittest.TestCase):
         self.assertIsNone(pref.workdir)
         self.assertIsNone(pref.username)
         self.assertIsNone(pref.password)
-        self.assertIsNone(pref.sortnotes)
         self.assertIsNone(pref.sortnotebooks)
         self.assertIsNone(pref.sorttags)
         self.assertIsNone(pref.xmlindent)

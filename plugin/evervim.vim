@@ -31,10 +31,6 @@ if !exists('g:evervim_password')
     let g:evervim_password = ''
 endif
 
-if !exists('g:evervim_sortnotes') " (updated|created|title) (asc|desc)
-    let g:evervim_sortnotes = 'updated desc'
-endif
-
 if !exists('g:evervim_sortnotebooks') " (name|serviceCreated|serviceUpdated) (asc|desc)
     let g:evervim_sortnotebooks = 'name asc'
 endif

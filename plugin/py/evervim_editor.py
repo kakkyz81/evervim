@@ -19,7 +19,6 @@ class EvervimPref(object):
         self.workdir              = None
         self.username             = None
         self.password             = None
-        self.sortnotes            = None
         self.sortnotebooks        = None
         self.sorttags             = None
         self.xmlindent            = None

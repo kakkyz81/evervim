@@ -86,6 +86,7 @@ function! evervim#notesByTag() " {{{
     map <silent> <buffer> < :call evervim#notesByTagMove('prev')<CR>
 endfunction
 "}}}
+
 function! evervim#notesByTagMove(way) " {{{
     if &ft != 'notesbytag'
         return
@@ -124,7 +125,7 @@ function! evervim#setBufAutocmdWhenWritePost() " {{{
     augroup END
 endfunction
 "}}}
-"}}}
+
 function! evervim#updateNote() " {{{
     python Evervimmer.getInstance().updateNote() 
 endfunction

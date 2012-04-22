@@ -1,9 +1,7 @@
 "=============================================================================
 " File: evervim.vim
 " Author: kakkyz <kakkyz81@gmail.com>
-" Last Change: 2011-05-05
-" Version: 0.1
-" WebPage: httpevervim#//github.com/kakkyz81/evervim
+" WebPage: http://kakkyz81.github.com/evervim/
 " License: MIT
 "
 "scriptencoding utf-8

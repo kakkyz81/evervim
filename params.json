@@ -1,0 +1,1 @@
+{"name":"Evervim","body":"# evervim.vim\r\n\r\n## description:\r\nedit evernote on vim.\r\n\r\n## requires:\r\npython,and vim with +python.\r\ndo \r\n:echo has('python')\r\ndisplay 1 then ok.\r\n\r\n","tagline":"edit evernote on vim.","google":"UA-9829696-7","note":"Don't delete this file! It's used internally to help with page regeneration."}

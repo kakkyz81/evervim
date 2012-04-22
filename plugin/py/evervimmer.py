@@ -34,6 +34,8 @@ class Evervimmer(object):
     notes = []
     notebooks = []
     tags = []
+    maxpages = 0
+    currentpage = 0
 
     editor  = EvervimEditor.getInstance()
     pref = EvervimPref.getInstance()
@@ -63,23 +65,72 @@ class Evervimmer(object):
         Evervimmer.editor.api.auth()
     #}}}
 
-    def notesByNotebook(self):  # {{{
+    def notesByNotebook(self, notebook=None):  # {{{
         """ get notelist by notebook """
-        selectnotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
-        Evervimmer.notes = Evervimmer.editor.api.notesByNotebook(selectnotebook)
+
+        if notebook == None:   # notebook is selected on list.( else then use currentNotebook for paginate.)
+            self.currentNotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
+            self.currentpage = 0
+
+        noteList = Evervimmer.editor.api.notesByNotebook(self.currentNotebook, self.currentpage)
+        self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [notebook:%s]" % self.__changeEncodeToBuffer(selectnotebook.name))
+                " [notebook:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.currentNotebook.name) ,
+                                         Evervimmer.maxcount,
+                                         Evervimmer.currentpage + 1,
+                                         Evervimmer.maxpages + 1
+                                         ))
     #}}}
 
-    def notesByTag(self):  # {{{
-        selecttag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
-        Evervimmer.notes = Evervimmer.editor.api.notesByTag(selecttag)
+    def notesByNotebookNextpage(self):  # {{{
+        if self.currentpage == self.maxpages:
+            return
+
+        self.currentpage += 1
+        self.notesByNotebook(self.currentNotebook)
+    #}}}
+
+    def notesByNotebookPrevpage(self):  # {{{
+        if self.currentpage == 0:
+            return
+
+        self.currentpage -= 1
+        self.notesByNotebook(self.currentNotebook)
+    #}}}
+
+    def notesByTag(self, tag=None):  # {{{
+        if tag == None:
+            self.currentTag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
+            self.currentpage = 0
+
+        noteList = Evervimmer.editor.api.notesByTag(self.currentTag, self.currentpage)
+        self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [tag:%s]" % self.__changeEncodeToBuffer(selecttag.name))
+                " [tag:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.currentTag.name) ,
+                                         Evervimmer.maxcount,
+                                         Evervimmer.currentpage + 1,
+                                         Evervimmer.maxpages + 1
+                                         ))
+    #}}}
+
+    def notesByTagNextpage(self):  # {{{
+        if self.currentpage == self.maxpages:
+            return
+
+        self.currentpage += 1
+        self.notesByTag(self.currentTag)
+    #}}}
+
+    def notesByTagPrevpage(self):  # {{{
+        if self.currentpage == 0:
+            return
+
+        self.currentpage -= 1
+        self.notesByTag(self.currentTag)
     #}}}
 
     def listNotebooks(self):  # {{{
@@ -217,3 +268,10 @@ class Evervimmer(object):
                 return unicode(string, 'utf-8').encode(self.pref.encoding)
             except:
                 return string
+
+    def __setNoteListPrameter(self, noteList):  # {{{
+        """ set host variable from noteList """
+        Evervimmer.notes = noteList.elem
+        Evervimmer.maxpages = noteList.maxpages
+        Evervimmer.currentpage = noteList.currentpage
+        Evervimmer.maxcount = noteList.maxcount

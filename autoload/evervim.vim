@@ -52,8 +52,26 @@ function! evervim#notesByNotebook() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().notesByNotebook()
     setlocal nomodifiable
-    
+    set ft=notes
+
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
+    map <silent> <buffer> > :call evervim#notesByNotebookMove('next')<CR>
+    map <silent> <buffer> < :call evervim#notesByNotebookMove('prev')<CR>
+endfunction
+"}}}
+
+function! evervim#notesByNotebookMove(way) " {{{
+    if &ft != 'notes'
+        return
+    endif
+
+    setlocal modifiable
+    if a:way == 'next'
+        python Evervimmer.getInstance().notesByNotebookNextpage()
+    else
+        python Evervimmer.getInstance().notesByNotebookPrevpage()
+    endif
+    setlocal nomodifiable
 endfunction
 "}}}
 
@@ -63,8 +81,25 @@ function! evervim#notesByTag() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().notesByTag()
     setlocal nomodifiable
-    
+    set ft=notesbytag
+
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
+    map <silent> <buffer> > :call evervim#notesByTagMove('next')<CR>
+    map <silent> <buffer> < :call evervim#notesByTagMove('prev')<CR>
+endfunction
+"}}}
+function! evervim#notesByTagMove(way) " {{{
+    if &ft != 'notesbytag'
+        return
+    endif
+
+    setlocal modifiable
+    if a:way == 'next'
+        python Evervimmer.getInstance().notesByTagNextpage()
+    else
+        python Evervimmer.getInstance().notesByTagPrevpage()
+    endif
+    setlocal nomodifiable
 endfunction
 "}}}
 
@@ -103,6 +138,7 @@ function! evervim#notebookList() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().listNotebooks()
     setlocal nomodifiable
+    set ft=notebooks
 
     map <silent> <buffer> <CR> :call evervim#notesByNotebook()<CR>
 endfunction
@@ -114,6 +150,7 @@ function! evervim#evervimSearchByQuery(word) " {{{
     setlocal modifiable
     python Evervimmer.getInstance().searchByQuery()
     setlocal nomodifiable
+    set ft=notebyquery
 
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
 endfunction
@@ -175,6 +212,7 @@ function! evervim#listTags() " {{{
     setlocal modifiable
     python Evervimmer.getInstance().listTags()
     setlocal nomodifiable
+    set ft=taglists
 
     map <silent> <buffer> <CR> :call evervim#notesByTag()<CR>
 endfunction

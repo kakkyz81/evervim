@@ -25,6 +25,7 @@ class EvernoteAPI(object):
     """ interface to evernote API """
     # CLASS CONSTANT {{{
     MAXNOTES = LimitConstants.EDAM_USER_NOTES_MAX
+    PAGEMAX  = 50
     NOTECONTENT_HEADER = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>'
     NOTECONTENT_FOOTER = '</en-note>'
     #}}}
@@ -106,24 +107,28 @@ class EvernoteAPI(object):
         return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
     #}}}
 
-    def notesByNotebook(self, notebook):  # {{{
+    def notesByNotebook(self, notebook, page=0):  # {{{
         """ return note by notebook(notebook object). TODO:edit noteFilter more """
         noteFilter = NoteStore.NoteFilter()
         noteFilter.notebookGuid = notebook.guid
         noteFilter.order = Types.NoteSortOrder.UPDATED
+        offset = page * EvernoteAPI.PAGEMAX
 
         authToken = self.__getAuthToken()
-        return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
+        noteList = self.__getNoteStore().findNotes(authToken, noteFilter, offset=offset, maxNotes=EvernoteAPI.MAXNOTES)
+        return self.__NoteList2EvernoteList(noteList)
     #}}}
 
-    def notesByTag(self, tag):  # {{{
+    def notesByTag(self, tag, page=0):  # {{{
         """ return note by tag(tag object). TODO:edit noteFilter more """
         noteFilter = NoteStore.NoteFilter()
         noteFilter.tagGuids = [tag.guid]
         noteFilter.order = Types.NoteSortOrder.UPDATED
+        offset = page * EvernoteAPI.PAGEMAX
 
         authToken = self.__getAuthToken()
-        return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
+        noteList = self.__getNoteStore().findNotes(authToken, noteFilter, offset=offset, maxNotes=EvernoteAPI.MAXNOTES)
+        return self.__NoteList2EvernoteList(noteList)
     #}}}
 
     def listNotebooks(self):  # {{{
@@ -226,7 +231,31 @@ class EvernoteAPI(object):
 
         return self.noteStore
     #}}}
+
+    def __NoteList2EvernoteList(self, noteList):  # {{{
+        """ get evernoteList from NoteList.  """
+        returnList = EvernoteList()
+        returnList.elem = noteList.notes
+        returnList.maxcount = noteList.totalNotes
+        # note count start by 0 because it - 1.
+        returnList.maxpages = (noteList.totalNotes - 1) / EvernoteAPI.PAGEMAX
+        if noteList.startIndex == 0:
+            returnList.currentpage = 0
+        else:
+            returnList.currentpage = noteList.startIndex / EvernoteAPI.PAGEMAX
+
+        return returnList
+    #}}}
+
 #### end class.
+
+
+class EvernoteList(object):
+    def __init__(self):
+        self.elem = []
+        self.maxcount = None
+        self.maxpages = None
+        self.currentpage = None
 
 #### CONSTANT
 # {{{

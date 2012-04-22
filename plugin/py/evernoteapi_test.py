@@ -4,6 +4,7 @@
 # License: MIT
 import unittest
 from evernoteapi import EvernoteAPI
+from evernoteapi import EvernoteList
 import evernote.edam.type.ttypes as Types
 
 import json
@@ -158,6 +159,61 @@ class TestEvernoteAPI(unittest.TestCase):
             return note
     #}}}
 
+    def testEvernoteList(self):  # {{{
+        evernoteList = EvernoteList()
+        self.assertTrue(hasattr(evernoteList, 'elem'))
+        self.assertTrue(hasattr(evernoteList, 'maxcount'))
+        self.assertTrue(hasattr(evernoteList, 'maxpage'))
+        self.assertTrue(hasattr(evernoteList, 'currentpage'))
+    #}}}
+
+    def testNoteList2EvernoteList(self):  # {{{
+        class dummy(object):
+            pass
+
+        noteList = dummy()
+        setattr(noteList , 'notes', [])
+        setattr(noteList , 'totalNotes', 1)
+        setattr(noteList , 'startIndex', 0)
+        # test of private method!
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.maxpage, 0)
+        self.assertEqual(evernoteList.currentpage, 0)
+
+        setattr(noteList , 'totalNotes', 50)  # 0 - 50 -> 0 ( 0 is none )
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.maxpage, 0)
+
+        setattr(noteList , 'totalNotes', 51)  # 51 - 100 -> 1
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.maxpage, 1)
+
+        setattr(noteList , 'totalNotes', 100)  # 101 - 150 -> 2
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.maxpage, 1)
+
+        setattr(noteList , 'totalNotes', 151)
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.maxpage, 3)
+
+        setattr(noteList , 'startIndex', 49)   # 0 - 49 -> 0index is start from 0
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.currentpage, 0)
+
+        setattr(noteList , 'startIndex', 50)   # 50 - 99 -> 1
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.currentpage, 1)
+
+        setattr(noteList , 'startIndex', 100)
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.currentpage, 2)
+
+        setattr(noteList , 'startIndex', 101)
+        evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
+        self.assertEqual(evernoteList.currentpage, 2)
+
+    #}}}
+
 if __name__ == '__main__':
     from time import localtime, strftime
     print '\n**' + strftime("%a, %d %b %Y %H:%M:%S", localtime()) + '**\n'
@@ -176,6 +232,7 @@ if __name__ == '__main__':
 #
 # 個別でテストするとき
 #   suite = unittest.TestSuite()
-#   suite.addTest(TestEvernoteAPI('testAuth'))
+#   suite.addTest(TestEvernoteAPI('testNotesByNotebook'))
+#   suite.addTest(TestEvernoteAPI('testNoteList2EvernoteList'))
 #   suite.addTest(TestEvernoteAPI('testRefreshAuth'))
 #   unittest.TextTestRunner().run(suite)

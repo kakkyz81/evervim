@@ -149,9 +149,26 @@ function! evervim#evervimSearchByQuery(word) " {{{
     setlocal modifiable
     python Evervimmer.getInstance().searchByQuery()
     setlocal nomodifiable
-    set ft=notebyquery
+    set ft=notesbyquery
 
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
+    map <silent> <buffer> > :call evervim#searchByQueryMove('next')<CR>
+    map <silent> <buffer> < :call evervim#searchByQueryMove('prev')<CR>
+endfunction
+"}}}
+"
+function! evervim#searchByQueryMove(way) " {{{
+    if &ft != 'notesbyquery'
+        return
+    endif
+
+    setlocal modifiable
+    if a:way == 'next'
+        python Evervimmer.getInstance().searchByQueryNextpage()
+    else
+        python Evervimmer.getInstance().searchByQueryPrevpage()
+    endif
+    setlocal nomodifiable
 endfunction
 "}}}
 

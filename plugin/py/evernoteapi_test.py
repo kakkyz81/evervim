@@ -80,7 +80,7 @@ class TestEvernoteAPI(unittest.TestCase):
         tags = self.api.listTags()
         notes = []
         for tag in tags:
-            [notes.append(note) for note in self.api.notesByTag(tag)]
+            [notes.append(note) for note in self.api.notesByTag(tag).elem]
         # less more 1 notes
         self.assertNotEquals(0, len(notes))
         for note in notes:
@@ -91,7 +91,7 @@ class TestEvernoteAPI(unittest.TestCase):
         notebooks = self.api.listNotebooks()
         notes = []
         for notebook in notebooks:
-            [notes.append(note) for note in self.api.notesByNotebook(notebook)]
+            [notes.append(note) for note in self.api.notesByNotebook(notebook).elem]
         # less more 1 notes
         self.assertNotEquals(0, len(notes))
         for note in notes:
@@ -99,7 +99,7 @@ class TestEvernoteAPI(unittest.TestCase):
      #}}}
 
     def testNotesByQuery(self):  # {{{
-        notes = self.api.notesByQuery('日本語')
+        notes = self.api.notesByQuery('日本語').elem
         # less more 1 notes
         self.assertNotEquals(0, len(notes))
         for note in notes:
@@ -153,7 +153,7 @@ class TestEvernoteAPI(unittest.TestCase):
     #}}}
 
     def __getOneNote(self):  # {{{
-        notes = self.api.notesByQuery('日本語')
+        notes = self.api.notesByQuery('日本語').elem
         self.assertNotEquals(0, len(notes))
         for note in notes:
             return note
@@ -163,7 +163,7 @@ class TestEvernoteAPI(unittest.TestCase):
         evernoteList = EvernoteList()
         self.assertTrue(hasattr(evernoteList, 'elem'))
         self.assertTrue(hasattr(evernoteList, 'maxcount'))
-        self.assertTrue(hasattr(evernoteList, 'maxpage'))
+        self.assertTrue(hasattr(evernoteList, 'maxpages'))
         self.assertTrue(hasattr(evernoteList, 'currentpage'))
     #}}}
 
@@ -177,24 +177,24 @@ class TestEvernoteAPI(unittest.TestCase):
         setattr(noteList , 'startIndex', 0)
         # test of private method!
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
-        self.assertEqual(evernoteList.maxpage, 0)
+        self.assertEqual(evernoteList.maxpages, 0)
         self.assertEqual(evernoteList.currentpage, 0)
 
         setattr(noteList , 'totalNotes', 50)  # 0 - 50 -> 0 ( 0 is none )
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
-        self.assertEqual(evernoteList.maxpage, 0)
+        self.assertEqual(evernoteList.maxpages, 0)
 
         setattr(noteList , 'totalNotes', 51)  # 51 - 100 -> 1
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
-        self.assertEqual(evernoteList.maxpage, 1)
+        self.assertEqual(evernoteList.maxpages, 1)
 
         setattr(noteList , 'totalNotes', 100)  # 101 - 150 -> 2
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
-        self.assertEqual(evernoteList.maxpage, 1)
+        self.assertEqual(evernoteList.maxpages, 1)
 
         setattr(noteList , 'totalNotes', 151)
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)
-        self.assertEqual(evernoteList.maxpage, 3)
+        self.assertEqual(evernoteList.maxpages, 3)
 
         setattr(noteList , 'startIndex', 49)   # 0 - 49 -> 0index is start from 0
         evernoteList = self.api._EvernoteAPI__NoteList2EvernoteList(noteList)

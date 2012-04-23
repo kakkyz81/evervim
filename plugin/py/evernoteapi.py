@@ -94,7 +94,7 @@ class EvernoteAPI(object):
         return returnNote
     #}}}
 
-    def notesByQuery(self, query):  # {{{
+    def notesByQuery(self, query, page=0):  # {{{
         """
         return note by query.
         query format see http://www.evernote.com/about/developer/api/evernote-api.htm#_Toc290381026
@@ -102,9 +102,11 @@ class EvernoteAPI(object):
         noteFilter = NoteStore.NoteFilter()
         noteFilter.words = query
         noteFilter.order = Types.NoteSortOrder.UPDATED
+        offset = page * EvernoteAPI.PAGEMAX
 
         authToken = self.__getAuthToken()
-        return self.__getNoteStore().findNotes(authToken, noteFilter, offset=0, maxNotes=EvernoteAPI.MAXNOTES).notes
+        noteList = self.__getNoteStore().findNotes(authToken, noteFilter, offset=offset, maxNotes=EvernoteAPI.MAXNOTES)
+        return self.__NoteList2EvernoteList(noteList)
     #}}}
 
     def notesByNotebook(self, notebook, page=0):  # {{{

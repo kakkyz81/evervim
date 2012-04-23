@@ -193,13 +193,37 @@ class Evervimmer(object):
             Evervimmer.editor.api.updateNote(Evervimmer.currentnote)
     #}}}
 
-    def searchByQuery(self):  # {{{
-        query = vim.eval("a:word")
-        Evervimmer.notes = Evervimmer.editor.api.notesByQuery(query)
+    def searchByQuery(self, query=None):  # {{{
+        if query == None:
+            self.query = vim.eval("a:word")
+            self.currentpage = 0
+
+        noteList = Evervimmer.editor.api.notesByQuery(self.query, self.currentpage)
+        self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
-        self.__setBufferList(notetitles, " [query:%s]" % query)
+        self.__setBufferList(notetitles,
+                " [query:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.query) ,
+                                         Evervimmer.maxcount,
+                                         Evervimmer.currentpage + 1,
+                                         Evervimmer.maxpages + 1
+                                         ))
+    #}}}
 
+    def searchByQueryNextpage(self):  # {{{
+        if self.currentpage == self.maxpages:
+            return
+
+        self.currentpage += 1
+        self.searchByQuery(self.query)
+    #}}}
+
+    def searchByQueryPrevpage(self):  # {{{
+        if self.currentpage == 0:
+            return
+
+        self.currentpage -= 1
+        self.searchByQuery(self.query)
     #}}}
 
     def createNote(self):  # {{{

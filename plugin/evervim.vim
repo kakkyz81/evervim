@@ -62,6 +62,8 @@ function! s:setCommand() " {{{
     command! EvervimCreateNote call evervim#createNoteBuf()
     command! EvervimListTags call s:listTags()
     command! EvervimReloadPref call s:setPref()
+    command! EvervimPageNext call evervim#pageNext()
+    command! EvervimPagePrev call evervim#pagePrev()
 endfunction
 "}}}
 

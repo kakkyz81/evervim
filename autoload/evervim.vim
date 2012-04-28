@@ -53,23 +53,6 @@ function! evervim#notesByNotebook() " {{{
     set ft=notes
 
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
-    map <silent> <buffer> > :call evervim#notesByNotebookMove('next')<CR>
-    map <silent> <buffer> < :call evervim#notesByNotebookMove('prev')<CR>
-endfunction
-"}}}
-
-function! evervim#notesByNotebookMove(way) " {{{
-    if &ft != 'notes'
-        return
-    endif
-
-    setlocal modifiable
-    if a:way == 'next'
-        python Evervimmer.getInstance().notesByNotebookNextpage()
-    else
-        python Evervimmer.getInstance().notesByNotebookPrevpage()
-    endif
-    setlocal nomodifiable
 endfunction
 "}}}
 
@@ -82,23 +65,6 @@ function! evervim#notesByTag() " {{{
     set ft=notesbytag
 
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
-    map <silent> <buffer> > :call evervim#notesByTagMove('next')<CR>
-    map <silent> <buffer> < :call evervim#notesByTagMove('prev')<CR>
-endfunction
-"}}}
-
-function! evervim#notesByTagMove(way) " {{{
-    if &ft != 'notesbytag'
-        return
-    endif
-
-    setlocal modifiable
-    if a:way == 'next'
-        python Evervimmer.getInstance().notesByTagNextpage()
-    else
-        python Evervimmer.getInstance().notesByTagPrevpage()
-    endif
-    setlocal nomodifiable
 endfunction
 "}}}
 
@@ -152,20 +118,37 @@ function! evervim#evervimSearchByQuery(word) " {{{
     set ft=notesbyquery
 
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
-    map <silent> <buffer> > :call evervim#searchByQueryMove('next')<CR>
-    map <silent> <buffer> < :call evervim#searchByQueryMove('prev')<CR>
 endfunction
 "}}}
-"
-function! evervim#searchByQueryMove(way) " {{{
-    if &ft != 'notesbyquery'
+ 
+function! evervim#pageNext() " {{{
+    if &ft != 'notes' && &ft != 'notesbytag' && &ft != 'notesbyquery'
         return
     endif
 
     setlocal modifiable
-    if a:way == 'next'
+    if &ft == 'notes'
+        python Evervimmer.getInstance().notesByNotebookNextpage()
+    elseif &ft == 'notesbytag'
+        python Evervimmer.getInstance().notesByTagNextpage()
+    elseif &ft == 'notesbyquery'
         python Evervimmer.getInstance().searchByQueryNextpage()
-    else
+    endif
+    setlocal nomodifiable
+endfunction
+"}}}
+"
+function! evervim#pagePrev() " {{{
+    if &ft != 'notes' && &ft != 'notesbytag' && &ft != 'notesbyquery'
+        return
+    endif
+
+    setlocal modifiable
+    if &ft == 'notes'
+        python Evervimmer.getInstance().notesByNotebookPrevpage()
+    elseif &ft == 'notesbytag'
+        python Evervimmer.getInstance().notesByTagPrevpage()
+    elseif &ft == 'notesbyquery'
         python Evervimmer.getInstance().searchByQueryPrevpage()
     endif
     setlocal nomodifiable
@@ -248,6 +231,8 @@ function! evervim#listBufSetup() " {{{
         setlocal buftype=nofile
         setlocal nowrap
         setlocal nonumber
+        nmap <silent> <buffer> > :<C-u>EvervimPageNext<CR>
+        nmap <silent> <buffer> < :<C-u>EvervimPagePrev<CR>
     endif
 endfunction
 "}}}

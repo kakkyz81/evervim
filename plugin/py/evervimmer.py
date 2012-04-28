@@ -77,7 +77,7 @@ class Evervimmer(object):
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [notebook:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.currentNotebook.name) ,
+                " [notebook:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (self.__changeEncodeToBuffer(self.currentNotebook.name) ,
                                          Evervimmer.maxcount,
                                          Evervimmer.currentpage + 1,
                                          Evervimmer.maxpages + 1
@@ -110,7 +110,7 @@ class Evervimmer(object):
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [tag:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.currentTag.name) ,
+                " [tag:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]"  % (self.__changeEncodeToBuffer(self.currentTag.name) ,
                                          Evervimmer.maxcount,
                                          Evervimmer.currentpage + 1,
                                          Evervimmer.maxpages + 1
@@ -203,7 +203,7 @@ class Evervimmer(object):
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
         self.__setBufferList(notetitles,
-                " [query:%s(%s)] page:%s/%s" % (self.__changeEncodeToBuffer(self.query) ,
+                " [query:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (self.__changeEncodeToBuffer(self.query) ,
                                          Evervimmer.maxcount,
                                          Evervimmer.currentpage + 1,
                                          Evervimmer.maxpages + 1

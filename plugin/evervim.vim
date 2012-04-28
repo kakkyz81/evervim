@@ -58,7 +58,7 @@ endif
 " ---------------------------------------------------------------------------
 function! s:setCommand() " {{{
     command! EvervimNotebookList call s:notebookList()
-    command! -nargs=+ EvervimmerSearchByQuery call s:evervimSearchByQuery(<q-args>)
+    command! -nargs=+ EvervimSearchByQuery call s:evervimSearchByQuery(<q-args>)
     command! EvervimCreateNote call evervim#createNoteBuf()
     command! EvervimListTags call s:listTags()
     command! EvervimReloadPref call s:setPref()

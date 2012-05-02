@@ -3,6 +3,7 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import vim
+import subprocess
 import sys
 import traceback
 import threading
@@ -269,11 +270,32 @@ class Evervimmer(object):
         self.__openBrowser(selectedNote.guid)
     #}}}
 
+    def currentNoteOpenClient(self):  # {{{
+        if None == Evervimmer.currentnote or None == Evervimmer.currentnote.guid:
+            return
+
+        self.__openClient(Evervimmer.currentnote.title)
+    #}}}
+
+    def cursorNoteOpenClient(self):  # {{{
+        currentline = int(vim.eval("line('.')"))
+        if currentline < 2:
+            return
+
+        selectedNote = Evervimmer.notes[currentline - 2]
+        self.__openClient(selectedNote.title)
+    #}}}
+
 # ----- private methods
 
     def __openBrowser(self, guid):  # {{{
         uri = "https://www.evernote.com/view/" + guid
         vim.command(":OpenBrowser " + uri)
+    #}}}
+
+    def __openClient(self, title):  # {{{
+        enscriptpath = vim.eval("g:evervim_enscriptpath")
+        subprocess.Popen(enscriptpath + " showNotes /q intitle:\"%s\"" % self.__changeEncodeToBuffer(title))
     #}}}
 
     def __setBufferList(self, buffertitlelist, title):  # {{{

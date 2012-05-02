@@ -49,6 +49,9 @@ if !exists('g:evervim_asyncupdate') "
     let g:evervim_asyncupdate = 1
 endif
 
+if !exists('g:evervim_enscriptpath') && (has('win32') || has('win64'))
+    let g:evervim_enscriptpath = '"C:\Program Files (x86)\Evernote\Evernote\ENScript.exe"'
+endif
 ""}}}
 
 " ---------------------------------------------------------------------------
@@ -62,6 +65,9 @@ function! s:setCommand() " {{{
     command! EvervimReloadPref call s:setPref()
     command! EvervimPageNext call evervim#pageNext()
     command! EvervimPagePrev call evervim#pagePrev()
+    if has('win32') || has('win64')
+        command! EvervimOpenClient call evervim#openClient()
+    endif
 endfunction
 "}}}
 

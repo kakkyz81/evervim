@@ -266,6 +266,22 @@ function! evervim#markdownBufSetup() " {{{
 endfunction
 "}}}
 
+function! evervim#noteOpenBrowser() " {{{
+    if &ft == 'notes' || &ft == 'notesbytag' || &ft == 'notesbyquery'
+        python Evervimmer.getInstance().cursorNoteOpenBrowser()
+    else
+        python Evervimmer.getInstance().currentNoteOpenBrowser()
+    endif
+endfunction
+"}}}
+
+" add command {{{
+" Check OpenBrowser is installed that must be after plugin loaded, so check this.
+if exists(':OpenBrowser') == 2
+    command! EvervimNoteOpenBrowser call evervim#noteOpenBrowser()
+endif
+"}}}
+
 python << EOF
 import sys,os,vim
 sys.path.append(os.path.join(vim.eval('expand("<sfile>:p:h")'),'../plugin/py/'))

@@ -253,7 +253,28 @@ class Evervimmer(object):
 
     #}}}
 
+    def currentNoteOpenBrowser(self):  # {{{
+        if None == Evervimmer.currentnote or None == Evervimmer.currentnote.guid:
+            return
+
+        self.__openBrowser(Evervimmer.currentnote.guid)
+    #}}}
+
+    def cursorNoteOpenBrowser(self):  # {{{
+        currentline = int(vim.eval("line('.')"))
+        if currentline < 2:
+            return
+
+        selectedNote = Evervimmer.notes[currentline - 2]
+        self.__openBrowser(selectedNote.guid)
+    #}}}
+
 # ----- private methods
+
+    def __openBrowser(self, guid):  # {{{
+        uri = "https://www.evernote.com/view/" + guid
+        vim.command(":OpenBrowser " + uri)
+    #}}}
 
     def __setBufferList(self, buffertitlelist, title):  # {{{
         vim.current.buffer[:] = None   # clear buffer

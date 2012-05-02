@@ -137,7 +137,7 @@ function! evervim#pageNext() " {{{
     setlocal nomodifiable
 endfunction
 "}}}
-"
+
 function! evervim#pagePrev() " {{{
     if &ft != 'notes' && &ft != 'notesbytag' && &ft != 'notesbyquery'
         return

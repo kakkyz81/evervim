@@ -4,8 +4,9 @@
 edit evernote on vim.
 
 ## requires:
-python,and vim with +python.
-do 
-:echo has('python')
-display 1 then ok.
+* python
+* the "markdown" package for python
+* vim with +python
+
+If your vim was compiled with +python, `:echo has('python')` will return 1.
 

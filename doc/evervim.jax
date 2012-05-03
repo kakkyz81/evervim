@@ -1,6 +1,6 @@
 *evervim.txt*	evernoteをvimで編集する。
 
-Version: 0.2.0
+Version: 0.3.5
 Author : kakkyz <kakkyz81@gmail.com>
 Japanese Documentation Author: kakkyz
 License: MIT license  
@@ -28,7 +28,8 @@ ToDo			|evervim-todo|
 ==============================================================================
 必要なもの						*evervim-requires*
 
-python及び+pythonでコンパイルされたvimが必要である。
+python及び+pythonでコンパイルされたvim及び
+pythonのmarkdownパッケージが必要である。
 pythonが有効かどうかは、
 >
 	:echo has('python')
@@ -64,6 +65,9 @@ pythonが有効かどうかは、
 2行目がタグ(カンマ区切り)
 3行目以下が本文となっている。
 
+もし、Openbrowserプラグインがインストールされていれば、ノートをブラウザで開く
+ことが出来る。 |:EvervimOpenBrowser|を参照せよ。
+(http://www.vim.org/scripts/script.php?script_id=3133)
 ==============================================================================
 インターフェース				*evervim-interface*
 
@@ -98,6 +102,17 @@ pythonが有効かどうかは、
 :EvervimCreateNote	  			*:EvervimCreateNote*
 		新規ノートを保存するためのバッファが開かれる。
 		バッファの保存時にノートがEvernoteに保存される
+
+:EvervimOpenBrowser	  			*:EvervimOpenBrowser*
+		ノートをブラウザで開く。個別のノートを開いている時または
+		ノートの一覧で対象にカーソルを合わせてこのコマンドを呼び出す。
+		OpenBrowserプラグインがインストールされている時だけ、
+		このコマンドは定義される。
+		(http://www.vim.org/scripts/script.php?script_id=3133)
+
+:EvervimOpenClient	  			*:EvervimOpenClient*
+		ノートをWindowsのクライアントで開く。
+		Windows上のVimだけ、このコマンドは定義される。
 
 :EvervimSetup					*:EvervimSetup*
 		アカウントのセットアップを行う。
@@ -185,5 +200,11 @@ Ver.0.2.2:2012-04-18
 
 Ver.0.3.0:2012-04-24
 - paginate on notes on notebook,tags and search by query.
+
+Ver.0.3.5:2012-05-02
+- Add :EvervimOpenBrowser. If you want use that command, install openbrowser.vim.
+- Add :EvervimOpenClient. Only windows,open note on 
+  Evernote Client by ENScript.exe.
+
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

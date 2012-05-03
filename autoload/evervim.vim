@@ -195,9 +195,6 @@ function! evervim#createNoteBuf() " {{{
         call evervim#markdownBufSetup()
     endif
 
-    augroup evervimNote
-        autocmd!
-    augroup END
     augroup evervimCreate
         autocmd!
         autocmd BufWritePost <buffer> :call evervim#createNote()
@@ -253,7 +250,10 @@ function! evervim#noteBufSetup() " {{{
     if g:evervim_usemarkdown != '0'
         call evervim#markdownBufSetup()
     endif
-
+    " clear autosave. because when reuse buffer, autosaved(bug fix).
+    augroup evervimNote
+        autocmd!
+    augroup END
 endfunction
 "}}}
 
@@ -283,6 +283,7 @@ function! evervim#openClient() " {{{
     endif
 endfunction
 "}}}
+
 " add command {{{
 " Check OpenBrowser is installed that must be after plugin loaded, so check this.
 if exists(':OpenBrowser') == 2

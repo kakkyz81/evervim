@@ -129,10 +129,6 @@ function! s:getNote() " {{{
 endfunction
 "}}}
 
-function! s:updateNote() " {{{
-    call evervim#updateNote()
-endfunction
-"}}}
 
 function! s:notebookList() " {{{
     call evervim#notebookList()

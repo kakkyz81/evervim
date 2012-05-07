@@ -22,7 +22,7 @@ INTRODUCTION					*evervim-introduction*
 
 *evervim* (or *evervim.vim* ) is plugin for edit evernote(http://www.evernote.com)
 on vim. This plugin can edit evernote by markdown or law XML. 
-See *g:evervim_usemarkdown* .
+See |:g:evervim_usemarkdown| .
 
 ==============================================================================
 REQUIRES					*evervim-requires*

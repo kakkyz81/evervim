@@ -23,7 +23,7 @@ ToDo			|evervim-todo|
 *evervim* (または *evervim.vim* ) はevernote(http://www.evernote.com)のノート
 をvimから編集することを目的に作成されたプラグインである。
 ノートは、markdown形式またはXML形式で編集することができる。 
-詳しくは、*g:evervim_usemarkdown* を参照すること。
+詳しくは、|:g:evervim_usemarkdown| を参照すること。
 
 ==============================================================================
 必要なもの						*evervim-requires*

@@ -52,6 +52,11 @@ endif
 if !exists('g:evervim_enscriptpath') && (has('win32') || has('win64'))
     let g:evervim_enscriptpath = '"C:\Program Files (x86)\Evernote\Evernote\ENScript.exe"'
 endif
+
+if !exists('g:evervim_splitoption') 
+    let g:evervim_splitoption= 'v'
+endif
+
 ""}}}
 
 " ---------------------------------------------------------------------------

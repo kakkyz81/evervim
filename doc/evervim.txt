@@ -1,6 +1,6 @@
 *evervim.txt*	edit evernote with vim.
 
-Version: 0.3.5
+Version: 0.3.6
 Author : kakkyz <kakkyz81@gmail.com>
 Documentation Author: 
 License: MIT license  
@@ -165,6 +165,13 @@ g:evervim_asyncupdate				*g:evervim_asyncupdate*
 		So if one thread runnning, not update to evernote.
 		Next timing of saving buffer, update to evernote.
 
+g:evervim_splitoption				*g:evervim_splitoption*
+		Open ListWindowmode, if 
+		let g:evervim_splitoption=''
+		open listwindow horizontal.
+
+		Default is 'v'. It means open vertical.
+
 ==============================================================================
 TODO						*evervim-todo*
 ・Improve English document.(You know, I'm not use English well, I needs help!)
@@ -196,5 +203,7 @@ Ver.0.3.5:2012-05-02
   Evernote Client by ENScript.exe.
 - Bug fix. Stopped auto upload when reuse __EVERVIM_NOTE__ buf. 
 
+Ver.0.3.6:2012-06-03
+- Add g:evervim_splitoption. 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

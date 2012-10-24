@@ -21,12 +21,8 @@ if !isdirectory(g:evervim_workdir)
     call mkdir(g:evervim_workdir, 'p')
 endif
 
-if !exists('g:evervim_username')
-    let g:evervim_username = ''
-endif
-
-if !exists('g:evervim_password')
-    let g:evervim_password = ''
+if !exists('g:evervim_devtoken')
+    let g:evervim_devtoken = ''
 endif
 
 if !exists('g:evervim_sortnotebooks') " (name|serviceCreated|serviceUpdated) (asc|desc)
@@ -37,12 +33,12 @@ if !exists('g:evervim_sorttags') " (name) (asc|desc)
     let g:evervim_sorttags= 'name asc'
 endif
 
-if !exists('g:evervim_xmlindent') " 
+if !exists('g:evervim_xmlindent') "
     let g:evervim_xmlindent= '    '
 endif
 " use markdown when edit content(default = 1 means use markdown)
 if !exists('g:evervim_usemarkdown') "
-    let g:evervim_usemarkdown= 1 
+    let g:evervim_usemarkdown= 1
 endif
 
 if !exists('g:evervim_asyncupdate') "
@@ -53,7 +49,7 @@ if !exists('g:evervim_enscriptpath') && (has('win32') || has('win64'))
     let g:evervim_enscriptpath = '"C:\Program Files (x86)\Evernote\Evernote\ENScript.exe"'
 endif
 
-if !exists('g:evervim_splitoption') 
+if !exists('g:evervim_splitoption')
     let g:evervim_splitoption= 'v'
 endif
 
@@ -73,34 +69,16 @@ function! s:setCommand() " {{{
     if has('win32') || has('win64')
         command! EvervimOpenClient call evervim#openClient()
     endif
+    " Check OpenBrowser is installed that must be after plugin loaded, so check this.
+    if exists(':OpenBrowser') == 2
+        command! EvervimOpenBrowser call evervim#openBrowser()
+    endif
 endfunction
 "}}}
 
-function! s:loadAccount() " {{{
-    let accountfile = g:evervim_workdir . '/evervim_account.txt'
-    if !filereadable(accountfile)
-        return
-    else
-        let account = readfile(accountfile)
-        let g:evervim_username = account[0]
-        let g:evervim_password = s:rot13(account[1])
-    endif
-endfunction
-"command! EvervimmerLoadAccount call s:loadAccount()
-"}}}
 
 function! s:logincheck() " {{{
     call evervim#logincheck()
-endfunction
-"}}}
-
-function! s:setusername() " {{{
-    let g:evervim_username = input('evernote username : ')
-endfunction
-"}}}
-
-function! s:setpassword() " {{{
-    let g:evervim_password = input('evernote password : ')
 endfunction
 "}}}
 
@@ -110,8 +88,6 @@ endfunction
 "}}}
 
 function! s:setup() " {{{
-    call s:setusername()
-    call s:setpassword()
     echo 'login check...'
     if evervim#setup() == '1'
         call s:setCommand()
@@ -120,7 +96,7 @@ endfunction
 "}}}
 
 function! s:notesByNotebook() " {{{
-    call evervim#notesByNotebook() 
+    call evervim#notesByNotebook()
 endfunction
 "}}}
 
@@ -133,7 +109,6 @@ function! s:getNote() " {{{
     call evervim#getNote()
 endfunction
 "}}}
-
 
 function! s:notebookList() " {{{
     call evervim#notebookList()
@@ -181,7 +156,7 @@ function! s:rot13(word) " {{{
             let returnword .= nr2char(num + 13)
         elseif 78 <= num && num <= 90
             let returnword .= nr2char(num - 13)
-        elseif 97 <= num && num <= 109 
+        elseif 97 <= num && num <= 109
             let returnword .= nr2char(num + 13)
         elseif 110 <= num && num <= 122
             let returnword .= nr2char(num - 13)
@@ -198,8 +173,7 @@ endfunction
 " setup
 " ---------------------------------------------------------------------------
 command! EvervimSetup call s:setup()
-call s:loadAccount()
-if g:evervim_password != ''
+if g:evervim_devtoken != ''
     call s:setCommand()
 endif
 

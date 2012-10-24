@@ -31,10 +31,9 @@ class EvernoteAPI(object):
     #}}}
 #### constractuor.
 
-    def __init__(self, username, password):  # {{{
+    def __init__(self, devtokens):  # {{{
         """ initialize """
-        self.username = username
-        self.password = password
+        self.devtokens = devtokens
 
         self.__setUserStore()
         self.__versioncheck()
@@ -151,38 +150,11 @@ class EvernoteAPI(object):
     #}}}
 
     def auth(self):  # {{{
-        """ Authentication & set result to self.user and self.authToken """
-        try:
-            authResult = self.userStore.authenticate(self.username, self.password,
-                            CONSUMER_KEY, CONSUMER_SECRET)
-        except Errors.EDAMUserException, e:
-            if e.parameter == "username":
-                    raise StandardError("wrong username. username=%s" % self.username)
-            if e.parameter == "password":
-                    raise StandardError("password is incorrect.")
-            raise StandardError("unknown errors.")
-
-        # set the auth result.
-        self.user = authResult.user
-        self.authToken = authResult.authenticationToken
-        # authResult.expiration && currenttime is msec
-        self.__setAuthExpiration(authResult)
-    #}}}
-
-    def refreshAuth(self):  # {{{
-        refreshedAuth = self.userStore.refreshAuthentication(self.authToken)
-        self.authToken = refreshedAuth.authenticationToken
-        self.__setAuthExpiration(refreshedAuth)
+        # check authtoken
+        self.userStore.getNoteStoreUrl(self.devtokens)
     #}}}
 
 #### private methods.
-    def __setAuthExpiration(self, auth):  # {{{
-        now = datetime.now()
-        # authResult.expiration && currenttime is msec
-        authlimitsec = (auth.expiration  -  auth.currentTime) / 1000
-        self.refreshAuthDataTime = now + timedelta(seconds=authlimitsec * AUTH_REFRESH_LATE)
-        self.expirationDataTime = now + timedelta(seconds=authlimitsec)
-    #}}}
 
     def __setUserStore(self):  # {{{
         """ setup userStore. """
@@ -202,31 +174,13 @@ class EvernoteAPI(object):
 
     def __getAuthToken(self):  # {{{
         """ get authtoken.  """
-        if not hasattr(self, 'authToken'):
-            self.auth()
-
-        now = datetime.now()
-        if now > self.expirationDataTime:
-            #  auth runout
-            self.auth()
-        elif now > self.refreshAuthDataTime:
-            self.refreshAuth()
-
-        return self.authToken
-    #}}}
-
-    def __getUser(self):  # {{{
-        """ get user.  """
-        if not hasattr(self, 'user'):
-            self.auth()
-
-        return self.user
+        return self.devtokens
     #}}}
 
     def __getNoteStore(self):  # {{{
         """ get NoteStore.  """
         if not hasattr(self, 'noteStore'):
-            noteStoreUri = NOTESTORE_URIBASE + self.__getUser().shardId
+            noteStoreUri = self.userStore.getNoteStoreUrl(self.devtokens)
             noteStoreHttpClient = THttpClient.THttpClient(noteStoreUri)
             noteStoreProtocol = TBinaryProtocol.TBinaryProtocol(noteStoreHttpClient)
             self.noteStore = NoteStore.Client(noteStoreProtocol)

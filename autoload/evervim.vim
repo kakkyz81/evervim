@@ -15,16 +15,11 @@ function! evervim#logincheck() " {{{
 try:
     Evervimmer.getInstance().auth()
     print 'login successful.'
-    f = open(os.path.join(vim.eval('g:evervim_workdir'),'evervim_account.txt'), 'w')
-    f.write(vim.eval("g:evervim_username"))
-    f.write("\n")
-    password = vim.eval("g:evervim_password")
-    f.write(password.encode('rot13'))
-    f.close()
-except StandardError, e:
-    print e
+except:
+    raise StandardError("login error")
 EOF
 catch
+    echomsg 'login error! g:evervim_devtoken is correct???'
     return '0'
 endtry
     return '1'
@@ -38,15 +33,15 @@ endfunction
 "}}}
 
 function! evervim#setup() " {{{
-    python Evervimmer.getInstance().setAPI()
     python Evervimmer.getInstance().setPref()
+    python Evervimmer.getInstance().setAPI()
     return evervim#logincheck()
 endfunction
 "}}}
 
 function! evervim#notesByNotebook() " {{{
     call evervim#listBufSetup()
-    
+
     setlocal modifiable
     python Evervimmer.getInstance().notesByNotebook()
     setlocal nomodifiable
@@ -58,7 +53,7 @@ endfunction
 
 function! evervim#notesByTag() " {{{
     call evervim#listBufSetup()
-    
+
     setlocal modifiable
     python Evervimmer.getInstance().notesByTag()
     setlocal nomodifiable
@@ -75,7 +70,7 @@ function! evervim#getNote() " {{{
 
     let l:pointer = line('.')
     call evervim#noteBufSetup()
- 
+
     setlocal modifiable
     python Evervimmer.getInstance().getNote()
     exec 'silent! :w!'
@@ -93,13 +88,13 @@ endfunction
 "}}}
 
 function! evervim#updateNote() " {{{
-    python Evervimmer.getInstance().updateNote() 
+    python Evervimmer.getInstance().updateNote()
 endfunction
 "}}}
 
 function! evervim#notebookList() " {{{
     call evervim#listBufSetup()
-    
+
     setlocal modifiable
     python Evervimmer.getInstance().listNotebooks()
     setlocal nomodifiable
@@ -120,7 +115,7 @@ function! evervim#evervimSearchByQuery(word) " {{{
     map <silent> <buffer> <CR> :call evervim#getNote()<CR>
 endfunction
 "}}}
- 
+
 function! evervim#pageNext() " {{{
     if &ft != 'notes' && &ft != 'notesbytag' && &ft != 'notesbyquery'
         return
@@ -167,7 +162,7 @@ endfunction
 
 function! evervim#createNote() " {{{
     try
-        python Evervimmer.getInstance().createNote() 
+        python Evervimmer.getInstance().createNote()
         " clear Create autocmd
         augroup evervimCreate
             autocmd!
@@ -204,7 +199,7 @@ endfunction
 
 function! evervim#listTags() " {{{
     call evervim#listBufSetup()
-    
+
     setlocal modifiable
     python Evervimmer.getInstance().listTags()
     setlocal nomodifiable
@@ -282,13 +277,6 @@ function! evervim#openClient() " {{{
         python Evervimmer.getInstance().currentNoteOpenClient()
     endif
 endfunction
-"}}}
-
-" add command {{{
-" Check OpenBrowser is installed that must be after plugin loaded, so check this.
-if exists(':OpenBrowser') == 2
-    command! EvervimOpenBrowser call evervim#openBrowser()
-endif
 "}}}
 
 python << EOF

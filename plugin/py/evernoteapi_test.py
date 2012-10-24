@@ -6,13 +6,13 @@ import unittest
 from evernoteapi import EvernoteAPI
 from evernoteapi import EvernoteList
 import evernote.edam.type.ttypes as Types
+import evernote.edam.error.ttypes as Errors
 
 import json
 
 testdata = json.load(open("evernoteapi_testdata.json"))
 
-USERNAME = testdata["username"]
-PASSWORD = testdata["password"]
+DEVELOPER_TOKEN = testdata["devtoken"]
 
 NOTECONTENT_HEADER = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>'
 NOTECONTENT_FOOTER = '</en-note>'
@@ -22,39 +22,12 @@ class TestEvernoteAPI(unittest.TestCase):
     """ doc """
 
     def setUp(self):  # {{{
-        self.api = EvernoteAPI(USERNAME, PASSWORD)
+        self.api = EvernoteAPI(DEVELOPER_TOKEN)
     #}}}
 
-    def testAuth(self):  # {{{
-        """ test auth """
-        self.api = EvernoteAPI(USERNAME, PASSWORD)
-        self.api.auth()
-        self.assertIsNotNone(self.api.user)
-        self.assertIsNotNone(self.api.refreshAuthDataTime)
-        self.assertIsNotNone(self.api.expirationDataTime)
-    #}}}
-
-    def testRefreshAuth(self):  # {{{
-        self.api = EvernoteAPI(USERNAME, PASSWORD)
-        self.api.auth()
-        token               = self.api.authToken
-        refreshAuthDataTime = self.api.refreshAuthDataTime
-        expirationDataTime  = self.api.expirationDataTime
-        self.api.refreshAuth()
-        self.assertNotEqual(token               , self.api.authToken)
-        self.assertNotEqual(refreshAuthDataTime , self.api.refreshAuthDataTime)
-        self.assertNotEqual(expirationDataTime  , self.api.expirationDataTime)
-    #}}}
-
-    def testAuthFairueByUsername(self):  # {{{
-        api = EvernoteAPI('wrong_user_name_xxxxxxxx', PASSWORD)
-        self.assertRaises(StandardError, lambda: {api.auth()})
-
-    #}}}
-
-    def testAuthFairueByPassword(self):  # {{{
-        api = EvernoteAPI(USERNAME, 'wrong_user_name_xxxxxxxx')
-        self.assertRaises(StandardError, lambda: {api.auth()})
+    def testAuthFairueWrongToken(self):  # {{{
+        self.api = EvernoteAPI("dummy tokens")
+        self.assertRaises(Errors.EDAMUserException, lambda: {self.api.auth()})
     #}}}
 
     def testListNoteBooks(self):  # {{{
@@ -232,7 +205,7 @@ if __name__ == '__main__':
 #
 # 個別でテストするとき
 #   suite = unittest.TestSuite()
-#   suite.addTest(TestEvernoteAPI('testNotesByNotebook'))
+#   suite.addTest(TestEvernoteAPI('testAuthFairueWrongToken'))
 #   suite.addTest(TestEvernoteAPI('testNoteList2EvernoteList'))
 #   suite.addTest(TestEvernoteAPI('testRefreshAuth'))
 #   unittest.TextTestRunner().run(suite)

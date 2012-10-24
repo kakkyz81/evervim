@@ -1,9 +1,9 @@
-*evervim.txt*	edit evernote with vim.
+*evervim.txt*  edit evernote with vim.
 
-Version: 0.3.6
+Version: 0.3.7
 Author : kakkyz <kakkyz81@gmail.com>
-Documentation Author: 
-License: MIT license  
+Documentation Author: kakkyz
+License: MIT license
 
 CONTENTS					*evervim-contents*
 
@@ -21,7 +21,7 @@ Changelog		|evervim-changelog|
 INTRODUCTION					*evervim-introduction*
 
 *evervim* (or *evervim.vim* ) is plugin for edit evernote(http://www.evernote.com)
-on vim. This plugin can edit evernote by markdown or law XML. 
+on vim. This plugin can edit evernote by markdown or law XML.
 See |:g:evervim_usemarkdown| .
 
 ==============================================================================
@@ -38,11 +38,19 @@ When display '1', then python is enable.
 INSTALL						*evervim-install*
 
 Install files into Vim script directory.
-After install,
+
+Get "Developer Tokens" from Evernote Web(https://www.evernote.com/api/DeveloperToken.action)
+and set g:evervim_devtoken, evervim will initialize on start VIM.
+
+vimrc example:
+    let g:evervim_devtoken='S=s999:U=9ee99c9:E=999d9999c99:C=99a99a99999:P=9cd:A=en-devtoken:H=cd99999de9999c99b999d99d999cb9f9'
+
+Initialize is not yet, set g:evervim_devtoken and do
 >
 	:EvervimSetup
 <
-command is added. Do it for setting, and input evernote userID and password.
+command, initialize evervim.
+(after initialized, added some command for evervim)
 
 ==============================================================================
 USAGE						*evervim-usage*
@@ -78,7 +86,7 @@ COMMAND 					*evervim-commands*
 
 :EvervimSearchByQuery  {query}			*:EvervimSearchByQuery*
 		Set searchword and display hit notes.
-		See formatting of searchword. 
+		See formatting of searchword.
 		http://dev.evernote.com/documentation/cloud/chapters/search_grammar.php#Search_Terms
 
 :EvervimPageNext				*:EvervimPageNext*
@@ -94,7 +102,7 @@ COMMAND 					*evervim-commands*
 		when buffer saved, note is saved on evernote.
 
 :EvervimOpenBrowser	  			*:EvervimOpenBrowser*
-		Open note on your browser. Use this command when open single 
+		Open note on your browser. Use this command when open single
 		note or set cursor on notes list.
 		This command is defined only "OpenBrowser" plugin is installed.
 		(http://www.vim.org/scripts/script.php?script_id=3133)
@@ -111,28 +119,22 @@ COMMAND 					*evervim-commands*
 ------------------------------------------------------------------------------
 variables					*evervim-variables*
 
+g:evervim_devtoken				*g:evervim_devtoken*
+	        It is "Developer Tokens" string to get from Evernote Web at below.
+	        https://www.evernote.com/api/DeveloperToken.action
+
+    Default is empty string.
+
 g:evervim_workdir				*g:evervim_workdir*
 		Work directory.
-		
+
 		Default is $HOME/.evervim
-
-g:evervim_username				*g:evervim_username*
-		Username of evernote. If you setting it on :EvervimSetup ,
-		You don't have to set this.
-		
-		Defaulte is empty string.
-
-g:evervim_password				*g:evervim_password*
-		Password of evernote. If you setting it on :EvervimSetup ,
-		You don't have to set this. It shoud not set for security.
-		
-		Defaulte is empty string.
 
 g:evervim_usemarkdown				*g:evervim_usemarkdown*
 		Edit note on markdown or XML.
 
 		** WARNNING: Markdown format is not keep design tags.
-		If you open already edited note (not evervim ex:web clipped note) 
+		If you open already edited note (not evervim ex:web clipped note)
 		and save it on evervim, the design tags will be  loss.  **
 
 		defalult is '1'. It means use markdown.
@@ -159,18 +161,21 @@ g:evervim_xmlindent				*g:evervim_xmlindent*
 g:evervim_asyncupdate				*g:evervim_asyncupdate*
 		This value means When save note,
 		asynchronous update to evernote or not.
-		
+
 		Default is '1'. Tt means asynchronous update.
 		Asynchronous update is not runnning multi.
 		So if one thread runnning, not update to evernote.
 		Next timing of saving buffer, update to evernote.
 
 g:evervim_splitoption				*g:evervim_splitoption*
-		Open ListWindowmode, if 
+		Open ListWindowmode, if
 		let g:evervim_splitoption=''
 		open listwindow horizontal.
 
 		Default is 'v'. It means open vertical.
+
+
+Edit note on markdown or XML.
 
 ==============================================================================
 TODO						*evervim-todo*
@@ -199,11 +204,17 @@ Ver.0.3.0:2012-04-24
 
 Ver.0.3.5:2012-05-02
 - Add :EvervimOpenBrowser. If you want use that command, install openbrowser.vim.
-- Add :EvervimOpenClient. Only windows,open note on 
+- Add :EvervimOpenClient. Only windows,open note on
   Evernote Client by ENScript.exe.
-- Bug fix. Stopped auto upload when reuse __EVERVIM_NOTE__ buf. 
+- Bug fix. Stopped auto upload when reuse __EVERVIM_NOTE__ buf.
 
 Ver.0.3.6:2012-06-03
-- Add g:evervim_splitoption. 
+- Add g:evervim_splitoption.
+
+Ver.0.3.7:2012-10-21
+- Change authentication, use deverloper token. (Evernote API changed.)
+- Add g:evervim_devtoken
+- Remove g:evervim_username
+- Remove g:evervim_password
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

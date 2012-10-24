@@ -14,9 +14,7 @@ from evernoteapi import EvernoteAPI
 import json
 testdata = json.load(open("evernoteapi_testdata.json"))
 
-USERNAME = testdata["username"]
-PASSWORD = testdata["password"]
-
+DEVELOPER_TOKEN = testdata["devtoken"]
 
 class TestEvervimEditor(unittest.TestCase):
     """ doc """
@@ -29,8 +27,7 @@ class TestEvervimEditor(unittest.TestCase):
         pref = EvervimPref._instance = None
         pref = EvervimPref.getInstance()
         self.assertIsNone(pref.workdir)
-        self.assertIsNone(pref.username)
-        self.assertIsNone(pref.password)
+        self.assertIsNone(pref.devtoken)
         self.assertIsNone(pref.sortnotebooks)
         self.assertIsNone(pref.sorttags)
         self.assertIsNone(pref.xmlindent)
@@ -45,18 +42,15 @@ class TestEvervimEditor(unittest.TestCase):
 
     def testSetAPI(self):  # {{{
         pref = EvervimPref.getInstance()
-        pref.username = None
-        pref.password = None
         self.assertRaises(AttributeError, lambda: self.editor.setAPI())
-        self.setPrefUserName()
+        self.setPrefdevtoken()
         self.editor.setAPI()
         self.assertTrue(True)
     #}}}
 
-    def setPrefUserName(self):  # {{{
+    def setPrefdevtoken(self):  # {{{
         pref = EvervimPref.getInstance()
-        pref.username = USERNAME
-        pref.password = PASSWORD
+        pref.devtoken = DEVELOPER_TOKEN
     #}}}
 
     def testNote2buffer(self):  # {{{
@@ -92,8 +86,7 @@ class TestEvervimEditor(unittest.TestCase):
     def testBuffer2note(self):  # {{{
         editor = EvervimEditor.getInstance()
         pref = EvervimPref.getInstance()
-        pref.username = USERNAME
-        pref.password = PASSWORD
+        pref.devtoken = DEVELOPER_TOKEN
         editor.setAPI()
         note = Types.Note()
         xmlBufferHead = u"""タイトルテスト

@@ -81,14 +81,14 @@ function! evervim#getNoteByGuid(guid) " {{{
     call evervim#noteBufSetup()
 
     setlocal modifiable
-    " try
+    try
         python Evervimmer.getInstance().getNoteByGuid(vim.eval("a:guid"))
-    " catch /.*/
-    "     echo v:exception
-    "     return
-    " endtry
-    exec 'silent! :w!'
-    call evervim#setBufAutocmdWhenWritePost()
+        exec 'silent! :w!'
+        call evervim#setBufAutocmdWhenWritePost()
+    catch /^Vim\%((\a\+)\)\=:E605/
+        " execute "silent bdelete! " . bufnr('__EVERVIM_NOTE__')
+        echoerr v:exception
+    endtry
 endfunction
 "}}}
 

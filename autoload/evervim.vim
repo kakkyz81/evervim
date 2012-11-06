@@ -19,7 +19,7 @@ except:
     raise StandardError("login error")
 EOF
 catch
-    echomsg 'login error! g:evervim_devtoken is correct???'
+    echomsg 'login error! is g:evervim_devtoken correct?'
     return '0'
 endtry
     return '1'
@@ -73,6 +73,20 @@ function! evervim#getNote() " {{{
 
     setlocal modifiable
     python Evervimmer.getInstance().getNote()
+    exec 'silent! :w!'
+    call evervim#setBufAutocmdWhenWritePost()
+endfunction
+"}}}
+function! evervim#getNoteByGuid(guid) " {{{
+    call evervim#noteBufSetup()
+
+    setlocal modifiable
+    " try
+        python Evervimmer.getInstance().getNoteByGuid(vim.eval("a:guid"))
+    " catch /.*/
+    "     echo v:exception
+    "     return
+    " endtry
     exec 'silent! :w!'
     call evervim#setBufAutocmdWhenWritePost()
 endfunction

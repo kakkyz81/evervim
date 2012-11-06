@@ -252,6 +252,24 @@ class Evervimmer(object):
         self.__getNote(selectedNote)
     #}}}
 
+
+    def getNoteByGuid(self, guid):  # {{{
+        """ get note by guid and setup buffer """
+        try:
+            note = Evervimmer.editor.api.getNote(guid)
+        except Exception as e:
+            print e
+            return
+        Evervimmer.currentnote = note
+
+        vim.current.buffer[:] = None  # clear buffer
+        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
+
+        vim.current.buffer[0] = lines[0]
+        for line in lines[1:]:
+            vim.current.buffer.append(line)
+
+
     def getNoteUnite(self, guid):  # {{{
         selectedNote = type("", (), {'guid': guid})
         self.__getNote(selectedNote)
@@ -419,15 +437,7 @@ class Evervimmer(object):
 
     def __getNote(self, selectedNote):  # {{{
         """ get note and setup buffer """
-        note = Evervimmer.editor.api.getNote(selectedNote)
-        Evervimmer.currentnote = note
-
-        vim.current.buffer[:] = None  # clear buffer
-        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
-
-        vim.current.buffer[0] = lines[0]
-        for line in lines[1:]:
-            vim.current.buffer.append(line)
+        getNoteByGuid(selectedNote.guid)
     # }}}
 
     def __setNoteCandidates(self, notes):  # {{{

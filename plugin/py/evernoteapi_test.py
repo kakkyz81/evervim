@@ -97,7 +97,7 @@ class TestEvernoteAPI(unittest.TestCase):
     def testGetNote(self):  # {{{
         note = self.__getOneNote()
         self.assertIsNone(note.content)
-        notewithContent = self.api.getNote(note)
+        notewithContent = self.api.getNote(note.guid)
         self.assertIsNotNone(notewithContent.content)
         notewithContent.tagNames.append('google')
         self.api.updateNote(notewithContent)
@@ -115,7 +115,7 @@ class TestEvernoteAPI(unittest.TestCase):
         self.assertIsNotNone(createdNote.guid, None)
         getnote = Types.Note()
         getnote.guid = createdNote.guid
-        self.assertIsNotNone(self.api.getNote(getnote))
+        self.assertIsNotNone(self.api.getNote(getnote.guid))
     #}}}
 
     def testWhenUpdateNoteTagDelete(self):  # {{{
@@ -135,7 +135,7 @@ class TestEvernoteAPI(unittest.TestCase):
 
         getnote = Types.Note()
         getnote.guid = createdNote.guid
-        getnote = self.api.getNote(getnote)
+        getnote = self.api.getNote(getnote.guid)
         self.assertIsNotNone(getnote)
         self.assertIsNone(getnote.tagGuids)
     #}}}

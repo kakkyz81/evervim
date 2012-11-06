@@ -182,7 +182,7 @@ class Evervimmer(object):
 
     def updateNoteInthread(self, note):  # {{{
         Evervimmer.editor.api.updateNote(note)
-        vim.command("echo 'evernote update successful.'")
+        vim.command("echohl MoreMsg | echomsg 'evernote update successful.' | echohl None")
     #}}}
 
     def updateNote(self):  # {{{
@@ -197,6 +197,7 @@ class Evervimmer(object):
             self.updatethread.start()
         else:
             Evervimmer.editor.api.updateNote(Evervimmer.currentnote)
+            vim.command("echo 'evernote update successful.'")
     #}}}
 
     def searchByQuery(self, query=None):  # {{{

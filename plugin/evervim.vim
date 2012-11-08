@@ -66,7 +66,7 @@ function! s:setCommand() " {{{
     command! EvervimReloadPref call s:setPref()
     command! EvervimPageNext call evervim#pageNext()
     command! EvervimPagePrev call evervim#pagePrev()
-    command! -nargs=1 EverVimEditNoteByGuid call evervim#getNoteByGuid(<args>)
+    command! -nargs=1 EvervimEditNoteByGuid call evervim#getNoteByGuid(<args>)
     if has('win32') || has('win64')
         command! EvervimOpenClient call evervim#openClient()
     endif

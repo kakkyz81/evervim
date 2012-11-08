@@ -296,7 +296,7 @@ endfunction
 try
 python << EOF
 import sys,os,vim
-sys.path.append(os.path.join(vim.eval('expand("<sfile>:p:h")'),'../plugin/py/'))
+sys.path.insert(1, os.path.join(vim.eval('expand("<sfile>:p:h")'),'../plugin/py/'))
 from evervimmer import Evervimmer
 EOF
 catch

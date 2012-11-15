@@ -6,7 +6,7 @@
 # {{{
 import sys
 import os
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), 'lib/'))
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../../submodule/evernote/lib/'))
 import time
 
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol

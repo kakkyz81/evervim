@@ -133,7 +133,6 @@ vimrc例:
 変数						*evervim-variables*
 
 g:evervim_devtoken				*g:evervim_devtoken*
-		ノートの編集にmarkdown形式を用いるかを示す。
 		evernoteのサイトから取得したDeveloper Tokens文字列。以下から入手する。
 		https://www.evernote.com/api/DeveloperToken.action
 

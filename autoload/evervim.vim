@@ -279,10 +279,29 @@ function! evervim#openClient() " {{{
 endfunction
 "}}}
 
+try
 python << EOF
 import sys,os,vim
 sys.path.append(os.path.join(vim.eval('expand("<sfile>:p:h")'),'../plugin/py/'))
 from evervimmer import Evervimmer
 EOF
+catch
+    "vim.command(":echoerr ' *** import markdown error! you must markdown library. see :help evervim. *** '")
+    delcommand EvervimNotebookList
+    delcommand EvervimSearchByQuery
+    delcommand EvervimCreateNote
+    delcommand EvervimListTags
+    delcommand EvervimReloadPref
+    delcommand EvervimPageNext
+    delcommand EvervimPagePrev
+    if exists(":EvervimOpenClient")
+        delcommand EvervimOpenClient
+    endif
+    if exists(":EvervimOpenBrowser")
+        delcommand EvervimOpenBrowser
+    endif
+    echoerr ' *** import markdown error !!! you must markdown library. see :help evervim. *** '
+endtry
+
 
 " vim: sts=4 sw=4 fdm=marker

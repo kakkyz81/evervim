@@ -35,6 +35,13 @@ pythonが有効かどうかは、
 	:echo has('python')
 <
 で確認することができる。(1が表示されれば、pythonは有効だ。)
+markdownがインストールされているかは、
+>
+	:python import markdown
+<
+で確認することができる。(エラーがなければ、markdownがインストールされている。
+markdownのインストールは、以下のURLを参照せよ。
+http://packages.python.org/Markdown/install.html
 
 ==============================================================================
 インストール						*evervim-install*
@@ -227,5 +234,8 @@ Ver.0.3.7:2012-10-21
 - Add g:evervim_splitoption.
 - Remove g:evervim_username
 - Remove g:evervim_password
+
+Ver.0.3.8:2013-01-21
+- Message change when markdown not installed
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

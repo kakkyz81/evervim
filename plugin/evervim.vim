@@ -42,7 +42,7 @@ if !exists('g:evervim_usemarkdown') "
 endif
 
 if !exists('g:evervim_asyncupdate') "
-    let g:evervim_asyncupdate = 1
+    let g:evervim_asyncupdate = 0
 endif
 
 if !exists('g:evervim_enscriptpath') && (has('win32') || has('win64'))

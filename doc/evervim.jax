@@ -183,7 +183,7 @@ g:evervim_xmlindent				*g:evervim_xmlindent*
 g:evervim_asyncupdate				*g:evervim_asyncupdate*
 		ノートを保存する際に、非同期でevernoteを更新をするかを示す。
 
-		初期値は'1'である。これは、非同期で更新するということである。
+		初期値は'0'である。これは、同期で更新するということである。
 		非同期更新は、同時に実行することが出来ない。このため前の
 		evernote更新中に再度バッファを保存した場合は、その更新を
 		evernoteに反映させない。次のバッファ保存時に反映される。

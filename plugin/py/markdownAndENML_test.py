@@ -68,10 +68,11 @@ class TestMarkdownAndENML(unittest.TestCase):
         sampleXML += '    > >'
         sampleXML += '   </code></pre>'
         sampleXML += '   <h3>asuka.langley</h3>'
+        sampleXML += '   test backtick<code>import markdown</code>test'
         sampleXML += '</en-note>'
         dom = minidom.parseString(sampleXML)
         lines = markdownAndENML.parseENML(dom.documentElement).splitlines()
-    #   print "\n".join(lines)
+#       print "\n".join(lines)
         self.assertEqual(lines[0], u'# らき☆すた')
         self.assertEqual(lines[1] , u'[<img alt="hope-echoes" src="http://www.google.co.jp/images/nav_logo101.png"/>')
         self.assertEqual(lines[2] , u'泉こなた](http://www.google.com)')
@@ -105,6 +106,8 @@ class TestMarkdownAndENML(unittest.TestCase):
         self.assertEqual(lines[30], u'        > >')
         self.assertEqual(lines[31], u'')
         self.assertEqual(lines[32], u'### asuka.langley')
+        self.assertEqual(lines[33], u'test backtick')
+        self.assertEqual(lines[34], u'`import markdown`test')
     # }}}
 
 if __name__ == '__main__':

@@ -36,6 +36,8 @@ removefootercode = re.compile('</code>$')
 
 
 def parseENML(node, level=0, result='', option=parserOption()):  # {{{
+# import html2text
+#   return html2text.html2text(node.toxml())
 #   print node.toxml()
 #   print "{0}:{1}:{2}:{3}:{4}:{5}".format(
 #           level ,
@@ -70,11 +72,16 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             option.pre = False
         elif tag == "code":
             option.code = True
-            precode = removeheadercode.sub('', xml.sax.saxutils.unescape(node.toxml()))
-            precode = removefootercode.sub('', precode)
-            for line in precode.splitlines():
-                result += "    %s\n" % line.rstrip()
-            result += "\n"
+            if option.pre == True:
+                precode = removeheadercode.sub('', xml.sax.saxutils.unescape(node.toxml()))
+                precode = removefootercode.sub('', precode)
+                for line in precode.splitlines():
+                    result += "    %s\n" % line.rstrip()
+                result += "\n"
+            else:
+                incode = removeheadercode.sub('`', xml.sax.saxutils.unescape(node.toxml()))
+                incode = removefootercode.sub('`', incode)
+                result += incode
             option.code = False
         elif tag == "p":
             option.p = True
@@ -105,6 +112,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
                 result += "> " * option.blockquote + _getData(node)
             else:
                 result += _getData(node)
+#           if not ( option.a == True or option.code == False ):
             if option.a == False:
                 result += "\n"
     return result

@@ -438,7 +438,7 @@ class Evervimmer(object):
 
     def __getNote(self, selectedNote):  # {{{
         """ get note and setup buffer """
-        getNoteByGuid(selectedNote.guid)
+        self.getNoteByGuid(selectedNote.guid)
     # }}}
 
     def __setNoteCandidates(self, notes):  # {{{

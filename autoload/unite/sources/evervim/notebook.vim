@@ -31,34 +31,32 @@ function! s:source.gather_candidates(args, context) "{{{
   " 簡単に実装してみました。
   " candidatesは下記のような仕様になっています。
   " [
-  "   { 
-  "     'word': '検索の際に、実際使われる文字列', 
-  "     'abbr': '表示される文字列', 
+  "   {
+  "     'word': '検索の際に、実際使われる文字列',
+  "     'abbr': '表示される文字列',
   "     'kind': '適用されるkindの名前',
   "     'source__{hogehoge}' : 'sourceにて独自に追加する要素。actionなどで使用する',
-  "     'action__{hogehoge}' : 'actionにて独自に追加する要素。actionなどで使用する', 
+  "     'action__{hogehoge}' : 'actionにて独自に追加する要素。actionなどで使用する',
   "   },
   " ...
   " ]
   " TODO リファクタリング
   python << CODE
+import vim
 import json
 
 candidates = []
-notebook_keys = ['name', 'defaultNotebook', 'serviceUpdated', 'sharedNotebookIds', 'sharedNotebooks', 'updateSequenceNum', 'published', 'serviceCreated', 'guid', 'stack', 'publishing']
+encoding = vim.eval('&enc')
 
 for notebook in Evervimmer.editor.api.listNotebooks():
-  note_dict = {}
-  for key in notebook_keys:
-    note_dict[key] = json.dumps(getattr(notebook, key))
+    candidate = {}
+    candidate['word'] = unicode(notebook.name, 'utf-8').encode(encoding)
+    candidate['source__notebook_guid'] = notebook.guid
+    candidate['source__new_notebook'] = 0
+    candidates.append(candidate)
 
-  candidate = {}
-  candidate['word'] = note_dict['name']
-  candidate['source__notebook_object'] = json.dumps(note_dict)
-  candidate['source__new_notebook'] = 0
-  candidates.append(candidate)
-
-vim.command('let candidates = %s' % candidates)
+candidates = sorted(candidates, key=lambda x:x['word']) # sort by notebook name
+vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
 CODE
 
   return candidates

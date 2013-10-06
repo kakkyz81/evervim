@@ -231,5 +231,8 @@ Ver.0.3.9:2013-02-11
 - Change asyncupdate is not default.
 - Convert backtick.
 
+Ver.0.4.0:2013-10-07
+- Bug fix. sometime error on multibyte string.
+
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

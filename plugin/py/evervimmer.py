@@ -242,30 +242,12 @@ class Evervimmer(object):
         currentline = int(vim.eval('l:pointer'))
         selectedNote = Evervimmer.notes[currentline - 2]
 
-        note = Evervimmer.editor.api.getNote(selectedNote)
-        Evervimmer.currentnote = note
-
-        vim.current.buffer[:] = None  # clear buffer
-        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
-
-        vim.current.buffer[0] = lines[0]
-        for line in lines[1:]:
-            vim.current.buffer.append(line)
-
+        self.__getNote(selectedNote)
     #}}}
 
     def getNoteUnite(self, guid):  # {{{
-        print "getNoteUnite"
         selectedNote = type("", (), {'guid':guid})
-        note = Evervimmer.editor.api.getNote(selectedNote)
-        Evervimmer.currentnote = note
-        # TODO DRY
-        vim.current.buffer[:] = None  # clear buffer
-        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
-
-        vim.current.buffer[0] = lines[0]
-        for line in lines[1:]:
-            vim.current.buffer.append(line)
+        self.__getNote(selectedNote)
     #}}}
 
     def currentNoteOpenBrowser(self):  # {{{
@@ -343,7 +325,7 @@ class Evervimmer(object):
             return string
         else:
             try:
-                return unicode(string, self.pref.encoding).encode('utf-8')
+                return unicode(string, self.pref.encoding).encode('utf-8', 'ignore')
             except:
                 return string
     # }}}
@@ -354,7 +336,7 @@ class Evervimmer(object):
             return string
         else:
             try:
-                return unicode(string, 'utf-8').encode(self.pref.encoding)
+                return unicode(string, 'utf-8').encode(self.pref.encoding, 'ignore')
             except:
                 return string
     # }}}
@@ -366,3 +348,17 @@ class Evervimmer(object):
         Evervimmer.currentpage = noteList.currentpage
         Evervimmer.maxcount = noteList.maxcount
     # }}}
+
+    def __getNote(self, selectedNote):  # {{{
+        """ get note and setup buffer """
+        note = Evervimmer.editor.api.getNote(selectedNote)
+        Evervimmer.currentnote = note
+
+        vim.current.buffer[:] = None  # clear buffer
+        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
+
+        vim.current.buffer[0] = lines[0]
+        for line in lines[1:]:
+            vim.current.buffer.append(line)
+    # }}}
+

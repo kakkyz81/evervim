@@ -20,10 +20,14 @@ function! s:source.gather_candidates(args, context) "{{{
     unlet candidates
   endif
 
-  if len(a:args) > 0 && type(a:args[0]) == type('')
-    let guid = a:args[0]
+  if len(a:args) > 0 && type(a:args[1]) == type('')
+    let guid = a:args[1]
 
-    let candidates = s:get_notelist(guid)
+    if 'notebook' == a:args[0]
+      let candidates = s:get_notelist_by_notebook(guid)
+    elseif 'tag' == a:args[0]
+      let candidates = s:get_notelist_by_tag(guid)
+    endif
     return candidates
   else
     call unite#print_error('guid is empty!')
@@ -49,8 +53,7 @@ function! s:source.change_candidates(args, context) "{{{
 endfunction"}}}
 
 " get note list from notebook guid
-function! s:get_notelist(guid) "{{{
-  call unite#print_message('TODO guidからnoteの一覧を取得&表示する')
+function! s:get_notelist_by_notebook(guid) "{{{
   if exists('candidates')
     unlet candidates
   endif
@@ -68,8 +71,34 @@ notebook = type("", (), {'guid':guid})
 for note in Evervimmer.editor.api.notesByNotebook(notebook).elem:
     candidate = {}
     candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
+    candidate['kind'] = 'evervim/note'
     candidate['source__note_guid'] = note.guid
-#   candidate['source__new_note'] = 0
+    candidate['source__new_note'] = 0
+    candidates.append(candidate)
+
+vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+CODE
+  return candidates
+endfunction " }}}
+
+" get note list from notebook tag
+function! s:get_notelist_by_tag(guid) "{{{
+  if exists('candidates')
+    unlet candidates
+  endif
+
+python << CODE
+candidates = []
+encoding = vim.eval('&enc')
+guid = vim.eval('a:guid')
+tag = type("", (), {'guid':guid})
+
+for note in Evervimmer.editor.api.notesByTag(tag).elem:
+    candidate = {}
+    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
+    candidate['kind'] = 'evervim/note'
+    candidate['source__note_guid'] = note.guid
+    candidate['source__new_note'] = 0
     candidates.append(candidate)
 
 vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))

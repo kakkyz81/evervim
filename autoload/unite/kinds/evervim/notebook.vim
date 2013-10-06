@@ -13,7 +13,7 @@ endfunction"}}}
 " 複数のsourceで使いまわせるようにする仕組みです。
 " source側kindに指定した名前のkindが使えるようになります。
 
-let s:action_table.get_notes = { 
+let s:action_table.get_notes = {
       \ 'description' : 'Get notes',
       \ 'is_selectable' : 0,
       \ 'is_quit' : 1,
@@ -24,7 +24,7 @@ function! s:action_table.get_notes.func(candidate) "{{{
     let context = unite#get_context()
     let context.input = ''
 
-    call unite#start([['evervim/note', guid]], context)
+    call unite#start([['evervim/note','notebook', guid]], context)
   else
     call unite#print_error('guid is empty!')
   endif

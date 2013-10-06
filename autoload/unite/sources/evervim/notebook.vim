@@ -42,9 +42,6 @@ function! s:source.gather_candidates(args, context) "{{{
   " ]
   " TODO リファクタリング
   python << CODE
-import vim
-import json
-
 candidates = []
 encoding = vim.eval('&enc')
 
@@ -60,7 +57,7 @@ vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, s
 CODE
 
   return candidates
-endfunction"}}}
+endfunction " }}}
 
 " 検索のクエリが書き換えられたときに候補の追加を行う
 function! s:source.change_candidates(args, context) "{{{

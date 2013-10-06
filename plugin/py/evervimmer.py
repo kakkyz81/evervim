@@ -254,6 +254,20 @@ class Evervimmer(object):
 
     #}}}
 
+    def getNoteUnite(self, guid):  # {{{
+        print "getNoteUnite"
+        selectedNote = type("", (), {'guid':guid})
+        note = Evervimmer.editor.api.getNote(selectedNote)
+        Evervimmer.currentnote = note
+        # TODO DRY
+        vim.current.buffer[:] = None  # clear buffer
+        lines = [self.__changeEncodeToBuffer(line) for line in self.editor.note2buffer(note)]
+
+        vim.current.buffer[0] = lines[0]
+        for line in lines[1:]:
+            vim.current.buffer.append(line)
+    #}}}
+
     def currentNoteOpenBrowser(self):  # {{{
         if None == Evervimmer.currentnote or None == Evervimmer.currentnote.guid:
             return

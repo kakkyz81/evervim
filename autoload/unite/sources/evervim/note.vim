@@ -48,16 +48,31 @@ function! s:source.change_candidates(args, context) "{{{
   return [new_note]
 endfunction"}}}
 
+" get note list from notebook guid
 function! s:get_notelist(guid) "{{{
   call unite#print_message('TODO guidからnoteの一覧を取得&表示する')
+  if exists('candidates')
+    unlet candidates
+  endif
 
-  let sample_candidate = {
-        \ 'word' : 'sample name',
-        \ 'kind' : 'evervim/note',
-        \ 'default_action' : 'open',
-        \ 'source__new_note' : 0,
-        \ 'source__guid' : a:guid,
-        \ }
+python << CODE
+import vim
+import json
 
-  return [sample_candidate]
-endfunction"}}}
+candidates = []
+encoding = vim.eval('&enc')
+guid = vim.eval('a:guid')
+
+notebook = type("", (), {'guid':guid})
+
+for note in Evervimmer.editor.api.notesByNotebook(notebook).elem:
+    candidate = {}
+    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
+    candidate['source__note_guid'] = note.guid
+#   candidate['source__new_note'] = 0
+    candidates.append(candidate)
+
+vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+CODE
+  return candidates
+endfunction " }}}

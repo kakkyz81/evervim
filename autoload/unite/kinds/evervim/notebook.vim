@@ -47,3 +47,12 @@ let s:action_table.delete = {
 function! s:action_table.delete.func(candidates) "{{{
   call unite#print_message('TODO 削除処理')
 endfunction"}}}
+
+let s:action_table.unite__new_candidate = {
+      \ 'description' : 'create new notebook',
+      \ 'is_invalidate_cache' : 1,
+      \ }
+function! s:action_table.unite__new_candidate.func(candidate) "{{{
+  let notebook_name = unite#util#input('Please input notebook title: ', '')
+  call unite#print_message('TODO create notebook')
+endfunction"}}}

@@ -19,9 +19,13 @@ function! s:action_table.new.func(candidate) "{{{
 
   if has_key(a:candidate, 'source__note_name') && a:candidate.source__new_note == 1
     let note_name = a:candidate.source__note_name
-    call evervim#createNoteBuf()
-    0,1substitute!^.*$!\=note_name!g
+    call unite#kinds#evervim#note#new#create_buffer(note_name)
   else
     call unite#print_message('Note is already exists')
   endif
+endfunction"}}}
+
+function! unite#kinds#evervim#note#new#create_buffer(note_name) "{{{
+  call evervim#createNoteBuf()
+  0,1substitute!^.*$!\=a:note_name!g
 endfunction"}}}

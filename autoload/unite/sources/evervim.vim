@@ -20,5 +20,4 @@ function! unite#sources#evervim#initialize() "{{{
 import vim
 import json
 CODE
-
 endfunction"}}}

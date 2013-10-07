@@ -12,7 +12,6 @@ endfunction"}}}
 " sourceの初期化処理
 function! s:source.hooks.on_init(args, context) "{{{
   call unite#sources#evervim#initialize()
-
   " hooks以下に関数を定義することで、フックを実行できる。
   " 詳細はuniteのdocumentを見る事
   " on_syntax

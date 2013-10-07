@@ -23,3 +23,12 @@ CODE
     exec 'silent! :w!'
     call evervim#setBufAutocmdWhenWritePost()
 endfunction " }}}
+
+let s:action_table.unite__new_candidate = {
+      \ 'description' : 'create new note',
+      \ 'is_invalidate_cache' : 1,
+      \ }
+function! s:action_table.unite__new_candidate.func(candidate) "{{{
+  let note_name = unite#util#input('Please input note title: ', '')
+  call unite#kinds#evervim#note#new#create_buffer(note_name)
+endfunction"}}}

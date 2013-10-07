@@ -14,7 +14,6 @@ let s:action_table.get_notes = {
       \ 'is_selectable' : 0,
       \ 'is_quit' : 1,
       \ }
-
 function! s:action_table.get_notes.func(candidate) "{{{
   if has_key(a:candidate, 'source__tag_guid')
     let guid = a:candidate.source__tag_guid
@@ -33,7 +32,7 @@ let s:action_table.rename = {
       \ 'is_quit' : 0
       \ }
 function! s:action_table.rename.func(candidates) "{{{
-  call unite#print_message('TODO ƒŠƒl[ƒ€ˆ—')
+  call unite#print_message('TODO ãƒªãƒãƒ¼ãƒ å‡¦ç†')
 endfunction"}}}
 
 let s:action_table.delete = {
@@ -42,5 +41,14 @@ let s:action_table.delete = {
       \ 'is_quit' : 0
       \ }
 function! s:action_table.delete.func(candidates) "{{{
-  call unite#print_message('TODO íœˆ—')
+  call unite#print_message('TODO Deleteå‡¦ç†')
+endfunction"}}}
+
+let s:action_table.unite__new_candidate = {
+      \ 'description' : 'create new tag',
+      \ 'is_invalidate_cache' : 1,
+      \ }
+function! s:action_table.unite__new_candidate.func(candidate) "{{{
+  let tag_name = unite#util#input('Please input tag name: ', '')
+  call unite#print_message('TODO create tag')
 endfunction"}}}

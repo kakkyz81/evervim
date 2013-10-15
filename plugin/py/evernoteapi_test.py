@@ -63,7 +63,6 @@ class TestEvernoteAPI(unittest.TestCase):
             self.assertTrue(hasattr(note, 'guid'))
      #}}}
 
-
     def testNotesByTag(self):  # {{{
         tags = self.api.listTags()
         notes = []

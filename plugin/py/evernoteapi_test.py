@@ -49,6 +49,21 @@ class TestEvernoteAPI(unittest.TestCase):
 
     #}}}
 
+    def testNotesAll(self):  # {{{
+        notes = self.api.notesAll().elem
+        # less more 1 notes
+        self.assertNotEquals(0, len(notes))
+        for note in notes:
+            self.assertTrue(hasattr(note, 'guid'))
+
+        # order by create
+        notes = self.api.notesAll(EvernoteAPI.ORDER_BY_CREATED).elem
+        self.assertNotEquals(0, len(notes))
+        for note in notes:
+            self.assertTrue(hasattr(note, 'guid'))
+     #}}}
+
+
     def testNotesByTag(self):  # {{{
         tags = self.api.listTags()
         notes = []
@@ -205,7 +220,7 @@ if __name__ == '__main__':
 #
 # 個別でテストするとき
 #   suite = unittest.TestSuite()
-#   suite.addTest(TestEvernoteAPI('testAuthFairueWrongToken'))
+#   suite.addTest(TestEvernoteAPI('testNotesAll'))
 #   suite.addTest(TestEvernoteAPI('testNoteList2EvernoteList'))
 #   suite.addTest(TestEvernoteAPI('testRefreshAuth'))
 #   unittest.TextTestRunner().run(suite)

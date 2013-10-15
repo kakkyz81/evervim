@@ -33,8 +33,8 @@ function! s:source.gather_candidates(args, context) "{{{
     endif
     return candidates
   else
-    call unite#print_error('guid is empty!')
-    return [{ 'word' : 'guid is empty!', 'is_dummy': 1 }]
+    let candidates = s:get_notelist_all()
+    return candidates
   endif
 endfunction"}}}
 
@@ -121,6 +121,29 @@ encoding = vim.eval('&enc')
 query = vim.eval('a:query')
 
 for note in Evervimmer.editor.api.notesByQuery(query).elem:
+    candidate = {}
+    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
+    candidate['kind'] = 'evervim/note'
+    candidate['source__note_guid'] = note.guid
+    candidate['source__new_note'] = 0
+    candidates.append(candidate)
+
+vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+CODE
+  return candidates
+endfunction " }}}
+
+" get note list all
+function! s:get_notelist_all() "{{{
+  if exists('candidates')
+    unlet candidates
+  endif
+
+python << CODE
+candidates = []
+encoding = vim.eval('&enc')
+
+for note in Evervimmer.editor.api.notesAll().elem:
     candidate = {}
     candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
     candidate['kind'] = 'evervim/note'

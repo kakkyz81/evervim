@@ -1,5 +1,6 @@
 let s:source = {
       \ 'name' : 'evervim/query',
+      \ 'default_kind' : 'evervim/query',
       \ 'hooks': {},
       \ }
 
@@ -22,7 +23,10 @@ endfunction"}}}
 
 function! s:source.gather_candidates(args, context) "{{{
   let query = a:context.source__input
-  call unite#print_message('TODO 検索 -> candidatesに変換')
+" call unite#print_message('TODO cache search word')
 
-  return [{ 'word': 'Input query:' . query }]
+  return [{
+    \ 'word': 'Input query:' . query ,
+    \ 'source__query': query
+    \ }]
 endfunction"}}}

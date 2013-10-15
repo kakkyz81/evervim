@@ -28,6 +28,8 @@ class EvernoteAPI(object):
     PAGEMAX  = 50
     NOTECONTENT_HEADER = '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>'
     NOTECONTENT_FOOTER = '</en-note>'
+    ORDER_BY_CREATED = Types.NoteSortOrder.CREATED
+    ORDER_BY_UPDATED = Types.NoteSortOrder.UPDATED
     #}}}
 #### constractuor.
 
@@ -91,6 +93,23 @@ class EvernoteAPI(object):
                                                      withResourcesAlternateData=False)
         returnNote.tagNames = self.__getNoteStore().getNoteTagNames(authToken, note.guid)
         return returnNote
+    #}}}
+
+    def notesAll(self, order=ORDER_BY_UPDATED, page=0):  # {{{
+        """
+        return all note sort by order,
+        """
+        noteFilter = NoteStore.NoteFilter()
+        if order == EvernoteAPI.ORDER_BY_CREATED:
+            noteFilter.order = EvernoteAPI.ORDER_BY_CREATED
+        else:
+            noteFilter.order = EvernoteAPI.ORDER_BY_UPDATED
+
+        offset = page * EvernoteAPI.PAGEMAX
+
+        authToken = self.__getAuthToken()
+        noteList = self.__getNoteStore().findNotes(authToken, noteFilter, offset=offset, maxNotes=EvernoteAPI.MAXNOTES)
+        return self.__NoteList2EvernoteList(noteList)
     #}}}
 
     def notesByQuery(self, query, page=0):  # {{{

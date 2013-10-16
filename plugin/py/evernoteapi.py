@@ -8,7 +8,6 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'lib/'))
 import time
-from datetime import datetime, timedelta
 
 import thrift.protocol.TBinaryProtocol as TBinaryProtocol
 import thrift.transport.THttpClient as THttpClient
@@ -16,7 +15,6 @@ import evernote.edam.userstore.UserStore as UserStore
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.notestore.NoteStore as NoteStore
 import evernote.edam.type.ttypes as Types
-import evernote.edam.error.ttypes as Errors
 import evernote.edam.limits.constants as LimitConstants
 # }}}
 
@@ -87,10 +85,10 @@ class EvernoteAPI(object):
         """ return note include content and tagNames  """
         authToken = self.__getAuthToken()
         returnNote = self.__getNoteStore().getNote(authToken, note.guid,
-                                                     withContent=True,
-                                                     withResourcesData=False,
-                                                     withResourcesRecognition=False,
-                                                     withResourcesAlternateData=False)
+                                                   withContent=True,
+                                                   withResourcesData=False,
+                                                   withResourcesRecognition=False,
+                                                   withResourcesAlternateData=False)
         returnNote.tagNames = self.__getNoteStore().getNoteTagNames(authToken, note.guid)
         return returnNote
     #}}}
@@ -185,8 +183,8 @@ class EvernoteAPI(object):
     def __versioncheck(self):  # {{{
         """ check version. """
         versionOK = self.userStore.checkVersion("evervim",
-                                           UserStoreConstants.EDAM_VERSION_MAJOR,
-                                           UserStoreConstants.EDAM_VERSION_MINOR)
+                                                UserStoreConstants.EDAM_VERSION_MAJOR,
+                                                UserStoreConstants.EDAM_VERSION_MINOR)
         if not versionOK:
             raise StandardError("evernoteAPI versionCheck NG. need update API(evervim/plugin/py/lib/*).")
     #}}}

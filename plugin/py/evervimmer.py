@@ -70,7 +70,7 @@ class Evervimmer(object):
     def notesByNotebook(self, notebook=None):  # {{{
         """ get notelist by notebook """
 
-        if notebook == None:   # notebook is selected on list.( else then use currentNotebook for paginate.)
+        if notebook is None:   # notebook is selected on list.( else then use currentNotebook for paginate.)
             self.currentNotebook = Evervimmer.notebooks[self.__getArrayIndexByCurrentLine()]
             self.currentpage = 0
 
@@ -78,13 +78,14 @@ class Evervimmer(object):
         self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
-        self.__setBufferList(notetitles,
-                " [notebook:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (self.__changeEncodeToBuffer(self.currentNotebook.name) ,
-                                         Evervimmer.maxcount,
-                                         Evervimmer.currentpage + 1,
-                                         Evervimmer.maxpages + 1
-                                         ))
-    #}}}
+        self.__setBufferList(
+            notetitles,
+            " [notebook:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (
+                self.__changeEncodeToBuffer(self.currentNotebook.name) ,
+                Evervimmer.maxcount,
+                Evervimmer.currentpage + 1,
+                Evervimmer.maxpages + 1))
+        #}}}
 
     def notesByNotebookNextpage(self):  # {{{
         if self.currentpage == self.maxpages:
@@ -103,7 +104,7 @@ class Evervimmer(object):
     #}}}
 
     def notesByTag(self, tag=None):  # {{{
-        if tag == None:
+        if tag is None:
             self.currentTag = Evervimmer.tags[self.__getArrayIndexByCurrentLine()]
             self.currentpage = 0
 
@@ -111,12 +112,15 @@ class Evervimmer(object):
         self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
-        self.__setBufferList(notetitles,
-                " [tag:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]"  % (self.__changeEncodeToBuffer(self.currentTag.name) ,
-                                         Evervimmer.maxcount,
-                                         Evervimmer.currentpage + 1,
-                                         Evervimmer.maxpages + 1
-                                         ))
+        self.__setBufferList(
+            notetitles,
+            " [tag:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]"  % (
+                self.__changeEncodeToBuffer(self.currentTag.name) ,
+                Evervimmer.maxcount,
+                Evervimmer.currentpage + 1,
+                Evervimmer.maxpages + 1
+            )
+        )
     #}}}
 
     def notesByTagNextpage(self):  # {{{
@@ -140,10 +144,10 @@ class Evervimmer(object):
         sortOpt = vim.eval('g:evervim_sortnotebooks').split()
         if sortOpt[1] == 'asc':
             Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
-                                                    getattr(b, sortOpt[0])))
+                                                       getattr(b, sortOpt[0])))
         else:
             Evervimmer.notebooks.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
-                                                    getattr(a, sortOpt[0])))
+                                                       getattr(a, sortOpt[0])))
 
         strs = [self.__changeEncodeToBuffer(notebook.name) for notebook in Evervimmer.notebooks]
         self.__setBufferList(strs, " [all notebooks]")
@@ -154,10 +158,10 @@ class Evervimmer(object):
         sortOpt = vim.eval('g:evervim_sorttags').split()
         if sortOpt[1] == 'asc':
             Evervimmer.tags.sort(lambda a, b: cmp(getattr(a, sortOpt[0]),
-                                               getattr(b, sortOpt[0])))
+                                                  getattr(b, sortOpt[0])))
         else:
             Evervimmer.tags.sort(lambda a, b: cmp(getattr(b, sortOpt[0]),
-                                               getattr(a, sortOpt[0])))
+                                                  getattr(a, sortOpt[0])))
 
         strs = [self.__changeEncodeToBuffer(tag.name) for tag in Evervimmer.tags]
         self.__setBufferList(strs, " [all tags]")
@@ -196,7 +200,7 @@ class Evervimmer(object):
     #}}}
 
     def searchByQuery(self, query=None):  # {{{
-        if query == None:
+        if query is None:
             self.query = vim.eval("a:word")
             self.currentpage = 0
 
@@ -204,12 +208,14 @@ class Evervimmer(object):
         self.__setNoteListPrameter(noteList)
 
         notetitles = [self.__changeEncodeToBuffer(note.title) for note in Evervimmer.notes]
-        self.__setBufferList(notetitles,
-                " [query:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (self.__changeEncodeToBuffer(self.query) ,
-                                         Evervimmer.maxcount,
-                                         Evervimmer.currentpage + 1,
-                                         Evervimmer.maxpages + 1
-                                         ))
+        self.__setBufferList(
+            notetitles,
+            " [query:%s(%s)] page:%s/%s  [\">\":next, \"<\":prev]" % (
+                self.__changeEncodeToBuffer(self.query) ,
+                Evervimmer.maxcount,
+                Evervimmer.currentpage + 1,
+                Evervimmer.maxpages + 1)
+        )
     #}}}
 
     def searchByQueryNextpage(self):  # {{{
@@ -247,7 +253,7 @@ class Evervimmer(object):
     #}}}
 
     def getNoteUnite(self, guid):  # {{{
-        selectedNote = type("", (), {'guid':guid})
+        selectedNote = type("", (), {'guid': guid})
         self.__getNote(selectedNote)
     #}}}
 
@@ -293,7 +299,7 @@ class Evervimmer(object):
             candidate['source__new_notebook'] = 0
             candidates.append(candidate)
 
-        candidates = sorted(candidates, key=lambda x:x['word']) # sort by notebook name
+        candidates = sorted(candidates, key=lambda x: x['word'])  # sort by notebook name
         vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
     #}}}
 
@@ -307,13 +313,12 @@ class Evervimmer(object):
             candidate['source__new_tag'] = 0
             candidates.append(candidate)
 
-        candidates = sorted(candidates, key=lambda x:x['word']) # sort by tag name
+        candidates = sorted(candidates, key=lambda x: x['word'])  # sort by tag name
         vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
     #}}}
 
     def uniteSourcesNoteAll(self):  # {{{
-        candidates = self.__setNoteCandidates(
-                Evervimmer.editor.api.notesAll().elem)
+        candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesAll().elem)
 
         vim.command('let candidates = %s' % json.dumps(
             candidates, ensure_ascii=False, sort_keys=True))
@@ -329,7 +334,7 @@ class Evervimmer(object):
 
     def uniteSourcesNoteByTag(self):  # {{{
         guid = vim.eval('a:guid')
-        tag = type("", (), {'guid':guid})
+        tag = type("", (), {'guid': guid})
 
         candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesByTag(tag).elem)
 
@@ -338,7 +343,7 @@ class Evervimmer(object):
 
     def uniteSourcesNoteByNotebook(self):  # {{{
         guid = vim.eval('a:guid')
-        notebook = type("", (), {'guid':guid})
+        notebook = type("", (), {'guid': guid})
 
         candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesByNotebook(notebook).elem)
 
@@ -357,12 +362,12 @@ class Evervimmer(object):
             try:
                 import _winreg
                 reg = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\ENScript.exe')
-                self.pref.enscriptpath =  _winreg.EnumValue(reg, 0)[1].encode('shift_jis')
+                self.pref.enscriptpath = _winreg.EnumValue(reg, 0)[1].encode('shift_jis')
             except:
                 print '_winreg error!'
                 pass
 
-        title_sjis =  unicode(title, 'utf-8', 'ignore').encode('shift_jis')
+        title_sjis = unicode(title, 'utf-8', 'ignore').encode('shift_jis')
         subprocess.Popen(self.pref.enscriptpath + " showNotes /q intitle:\"%s\"" % title_sjis)
     #}}}
 

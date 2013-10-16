@@ -73,7 +73,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             option.pre = False
         elif tag == "code":
             option.code = True
-            if option.pre == True:
+            if option.pre is True:
                 precode = removeheadercode.sub('', xml.sax.saxutils.unescape(node.toxml()))
                 precode = removefootercode.sub('', precode)
                 for line in precode.splitlines():
@@ -114,7 +114,7 @@ def parseENML(node, level=0, result='', option=parserOption()):  # {{{
             else:
                 result += _getData(node)
 #           if not ( option.a == True or option.code == False ):
-            if option.a == False:
+            if option.a is False:
                 result += "\n"
     return result
 #}}}
@@ -155,16 +155,16 @@ def _getAttribute(node):  # {{{
 
 def _getNodeType(node):  # {{{
     """ return NodeType as String """
-    if   node.nodeType == node.ELEMENT_NODE                    : return   "ELEMENT_NODE"
-    elif node.nodeType == node.ATTRIBUTE_NODE                  : return   "ATTRIBUTE_NODE"
-    elif node.nodeType == node.TEXT_NODE                       : return   "TEXT_NODE"
-    elif node.nodeType == node.CDATA_SECTION_NODE              : return   "CDATA_SECTION_NODE"
-    elif node.nodeType == node.ENTITY_NODE                     : return   "ENTITY_NODE"
-    elif node.nodeType == node.PROCESSING_INSTRUCTION_NODE     : return   "PROCESSING_INSTRUCTION_NODE"
-    elif node.nodeType == node.COMMENT_NODE                    : return   "COMMENT_NODE"
-    elif node.nodeType == node.DOCUMENT_NODE                   : return   "DOCUMENT_NODE"
-    elif node.nodeType == node.DOCUMENT_TYPE_NODE              : return   "DOCUMENT_TYPE_NODE"
-    elif node.nodeType == node.NOTATION_NODE                   : return   "NOTATION_NODE"
+    if node.nodeType   == node.ELEMENT_NODE                    : return "ELEMENT_NODE"
+    elif node.nodeType == node.ATTRIBUTE_NODE                  : return "ATTRIBUTE_NODE"
+    elif node.nodeType == node.TEXT_NODE                       : return "TEXT_NODE"
+    elif node.nodeType == node.CDATA_SECTION_NODE              : return "CDATA_SECTION_NODE"
+    elif node.nodeType == node.ENTITY_NODE                     : return "ENTITY_NODE"
+    elif node.nodeType == node.PROCESSING_INSTRUCTION_NODE     : return "PROCESSING_INSTRUCTION_NODE"
+    elif node.nodeType == node.COMMENT_NODE                    : return "COMMENT_NODE"
+    elif node.nodeType == node.DOCUMENT_NODE                   : return "DOCUMENT_NODE"
+    elif node.nodeType == node.DOCUMENT_TYPE_NODE              : return "DOCUMENT_TYPE_NODE"
+    elif node.nodeType == node.NOTATION_NODE                   : return "NOTATION_NODE"
     return "UKNOWN NODE"
 #}}}
 

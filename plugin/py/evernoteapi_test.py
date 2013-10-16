@@ -3,6 +3,7 @@
 # Author: kakkyz <kakkyz81@gmail.com>
 # License: MIT
 import unittest
+import os
 from evernoteapi import EvernoteAPI
 from evernoteapi import EvernoteList
 import evernote.edam.type.ttypes as Types
@@ -10,7 +11,7 @@ import evernote.edam.error.ttypes as Errors
 
 import json
 
-testdata = json.load(open("evernoteapi_testdata.json"))
+testdata = json.load(open(os.path.dirname(__file__) + "/evernoteapi_testdata.json"))
 
 DEVELOPER_TOKEN = testdata["devtoken"]
 

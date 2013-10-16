@@ -12,9 +12,11 @@ from evervim_editor import EvervimPref
 from evernoteapi import EvernoteAPI
 
 import json
-testdata = json.load(open("evernoteapi_testdata.json"))
+
+testdata = json.load(open(os.path.dirname(__file__) + "/evernoteapi_testdata.json"))
 
 DEVELOPER_TOKEN = testdata["devtoken"]
+
 
 class TestEvervimEditor(unittest.TestCase):
     """ doc """
@@ -41,7 +43,6 @@ class TestEvervimEditor(unittest.TestCase):
     #}}}
 
     def testSetAPI(self):  # {{{
-        pref = EvervimPref.getInstance()
         self.assertRaises(AttributeError, lambda: self.editor.setAPI())
         self.setPrefdevtoken()
         self.editor.setAPI()
@@ -68,19 +69,17 @@ class TestEvervimEditor(unittest.TestCase):
         xmlStrings = editor.note2buffer(note)
         self.assertEqual(u'タイトルテスト'.encode('utf-8'), xmlStrings[0])
         self.assertEqual(u'Tags:タグ１,*タグ２'.encode('utf-8'), xmlStrings[1])
-        self.assertEqual('this is content'.encode('utf-8'), xmlStrings[2])  # this is content
-        self.assertEqual('本文テスト'.encode('utf-8'), xmlStrings[3])       # 本文テスト
-        self.assertEqual('<h3>'.encode('utf-8'), xmlStrings[4])             # <h3>
-        self.assertEqual('    たぐ３'.encode('utf-8'), xmlStrings[5])       #     たぐ３
-        self.assertEqual('</h3>'.encode('utf-8'), xmlStrings[6])            # </h3>
+        self.assertEqual('this is content'.encode('utf-8'), xmlStrings[2])   # this is content
+        self.assertEqual(u'本文テスト'.encode('utf-8'), xmlStrings[3])       # 本文テスト
+        self.assertEqual(u'<h3>たぐ３</h3>'.encode('utf-8'), xmlStrings[4])
 
         EvervimPref.getInstance().usemarkdown = '1'  # dont use markdown
         mkdStrings = editor.note2buffer(note)
         self.assertEqual(u'# タイトルテスト'.encode('utf-8'), mkdStrings[0])
         self.assertEqual(u'Tags:タグ１,*タグ２'.encode('utf-8'), xmlStrings[1])
         self.assertEqual('this is content'.encode('utf-8'), mkdStrings[2])
-        self.assertEqual('本文テスト'.encode('utf-8'), mkdStrings[3])
-        self.assertEqual('### たぐ３'.encode('utf-8'), mkdStrings[4])
+        self.assertEqual(u'本文テスト'.encode('utf-8'), mkdStrings[3])
+        self.assertEqual(u'### たぐ３'.encode('utf-8'), mkdStrings[4])
     # }}}
 
     def testBuffer2note(self):  # {{{

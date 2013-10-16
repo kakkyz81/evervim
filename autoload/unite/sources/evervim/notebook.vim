@@ -39,21 +39,8 @@ function! s:source.gather_candidates(args, context) "{{{
   "   },
   " ...
   " ]
-  " TODO リファクタリング
-  python << CODE
-candidates = []
-encoding = vim.eval('&enc')
-
-for notebook in Evervimmer.editor.api.listNotebooks():
-    candidate = {}
-    candidate['word'] = unicode(notebook.name, 'utf-8').encode(encoding)
-    candidate['source__notebook_guid'] = notebook.guid
-    candidate['source__new_notebook'] = 0
-    candidates.append(candidate)
-
-candidates = sorted(candidates, key=lambda x:x['word']) # sort by notebook name
-vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
-CODE
+  " set candidates on python code.
+  python Evervimmer.getInstance().uniteSourcesNotebook()
 
   return candidates
 endfunction " }}}

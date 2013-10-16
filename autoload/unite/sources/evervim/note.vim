@@ -61,26 +61,7 @@ function! s:get_notelist_by_notebook(guid) "{{{
     unlet candidates
   endif
 
-python << CODE
-import vim
-import json
-
-candidates = []
-encoding = vim.eval('&enc')
-guid = vim.eval('a:guid')
-
-notebook = type("", (), {'guid':guid})
-
-for note in Evervimmer.editor.api.notesByNotebook(notebook).elem:
-    candidate = {}
-    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
-    candidate['kind'] = 'evervim/note'
-    candidate['source__note_guid'] = note.guid
-    candidate['source__new_note'] = 0
-    candidates.append(candidate)
-
-vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
-CODE
+  python Evervimmer.getInstance().uniteSourcesNoteByNotebook()
   return candidates
 endfunction " }}}
 
@@ -90,22 +71,7 @@ function! s:get_notelist_by_tag(guid) "{{{
     unlet candidates
   endif
 
-python << CODE
-candidates = []
-encoding = vim.eval('&enc')
-guid = vim.eval('a:guid')
-tag = type("", (), {'guid':guid})
-
-for note in Evervimmer.editor.api.notesByTag(tag).elem:
-    candidate = {}
-    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
-    candidate['kind'] = 'evervim/note'
-    candidate['source__note_guid'] = note.guid
-    candidate['source__new_note'] = 0
-    candidates.append(candidate)
-
-vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
-CODE
+  python Evervimmer.getInstance().uniteSourcesNoteByTag()
   return candidates
 endfunction " }}}
 
@@ -115,21 +81,7 @@ function! s:get_notelist_by_query(query) "{{{
     unlet candidates
   endif
 
-python << CODE
-candidates = []
-encoding = vim.eval('&enc')
-query = vim.eval('a:query')
-
-for note in Evervimmer.editor.api.notesByQuery(query).elem:
-    candidate = {}
-    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
-    candidate['kind'] = 'evervim/note'
-    candidate['source__note_guid'] = note.guid
-    candidate['source__new_note'] = 0
-    candidates.append(candidate)
-
-vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
-CODE
+  python Evervimmer.getInstance().uniteSourcesNoteByQuery()
   return candidates
 endfunction " }}}
 
@@ -139,19 +91,6 @@ function! s:get_notelist_all() "{{{
     unlet candidates
   endif
 
-python << CODE
-candidates = []
-encoding = vim.eval('&enc')
-
-for note in Evervimmer.editor.api.notesAll().elem:
-    candidate = {}
-    candidate['word'] = unicode(note.title, 'utf-8').encode(encoding)
-    candidate['kind'] = 'evervim/note'
-    candidate['source__note_guid'] = note.guid
-    candidate['source__new_note'] = 0
-    candidates.append(candidate)
-
-vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
-CODE
+  python Evervimmer.getInstance().uniteSourcesNoteAll()
   return candidates
 endfunction " }}}

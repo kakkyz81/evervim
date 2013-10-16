@@ -8,6 +8,7 @@ import sys
 import traceback
 import threading
 import copy
+import json
 from evervim_editor import EvervimEditor
 from evervim_editor import EvervimPref
 from xml.dom import minidom
@@ -282,6 +283,68 @@ class Evervimmer(object):
         self.__openClient(selectedNote.title)
     #}}}
 
+    def uniteSourcesNotebook(self):  # {{{
+        candidates = []
+
+        for notebook in Evervimmer.editor.api.listNotebooks():
+            candidate = {}
+            candidate['word'] = unicode(notebook.name, 'utf-8').encode(self.pref.encoding)
+            candidate['source__notebook_guid'] = notebook.guid
+            candidate['source__new_notebook'] = 0
+            candidates.append(candidate)
+
+        candidates = sorted(candidates, key=lambda x:x['word']) # sort by notebook name
+        vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
+    def uniteSourcesTag(self):  # {{{
+        candidates = []
+
+        for tag in Evervimmer.editor.api.listTags():
+            candidate = {}
+            candidate['word'] = unicode(tag.name, 'utf-8').encode(self.pref.encoding)
+            candidate['source__tag_guid'] = tag.guid
+            candidate['source__new_tag'] = 0
+            candidates.append(candidate)
+
+        candidates = sorted(candidates, key=lambda x:x['word']) # sort by tag name
+        vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
+    def uniteSourcesNoteAll(self):  # {{{
+        candidates = self.__setNoteCandidates(
+                Evervimmer.editor.api.notesAll().elem)
+
+        vim.command('let candidates = %s' % json.dumps(
+            candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
+    def uniteSourcesNoteByQuery(self):  # {{{
+        query = vim.eval('a:query')
+
+        candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesByQuery(query).elem)
+
+        vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
+    def uniteSourcesNoteByTag(self):  # {{{
+        guid = vim.eval('a:guid')
+        tag = type("", (), {'guid':guid})
+
+        candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesByTag(tag).elem)
+
+        vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
+    def uniteSourcesNoteByNotebook(self):  # {{{
+        guid = vim.eval('a:guid')
+        notebook = type("", (), {'guid':guid})
+
+        candidates = self.__setNoteCandidates(Evervimmer.editor.api.notesByNotebook(notebook).elem)
+
+        vim.command('let candidates = %s' % json.dumps(candidates, ensure_ascii=False, sort_keys=True))
+    #}}}
+
 # ----- private methods
 
     def __openBrowser(self, guid):  # {{{
@@ -362,3 +425,16 @@ class Evervimmer(object):
             vim.current.buffer.append(line)
     # }}}
 
+    def __setNoteCandidates(self, notes):  # {{{
+        candidates = []
+
+        for note in notes:
+            candidate = {}
+            candidate['word'] = unicode(note.title, 'utf-8').encode(self.pref.encoding)
+            candidate['kind'] = 'evervim/note'
+            candidate['source__note_guid'] = note.guid
+            candidate['source__new_note'] = 0
+            candidates.append(candidate)
+
+        return candidates
+    # }}}
